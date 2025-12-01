@@ -9,22 +9,25 @@ import MyBookingsModal from './pages/MyBookingsModal'
 import Terms from './pages/Legal/Terms'
 import Privacy from './pages/Legal/Privacy'
 import About from './pages/Legal/About'
+import { ProfileProvider } from './context/ProfileContext'
 
 export default function App() {
   return (
-    <BookingProvider>
-      <MyBookingsProvider>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/agendar" element={<BookingModal><BookingPage /></BookingModal>} />
-            <Route path="/agendamentos" element={<MyBookingsModal />} />
-            <Route path="/termos" element={<Terms />} />
-            <Route path="/privacidade" element={<Privacy />} />
-            <Route path="/sobre" element={<About />} />
-          </Routes>
-        </Layout>
-      </MyBookingsProvider>
-    </BookingProvider>
+    <ProfileProvider>
+      <BookingProvider>
+        <MyBookingsProvider>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/agendar" element={<BookingModal><BookingPage /></BookingModal>} />
+              <Route path="/agendamentos" element={<MyBookingsModal />} />
+              <Route path="/termos" element={<Terms />} />
+              <Route path="/privacidade" element={<Privacy />} />
+              <Route path="/sobre" element={<About />} />
+            </Routes>
+          </Layout>
+        </MyBookingsProvider>
+      </BookingProvider>
+    </ProfileProvider>
   )
 }

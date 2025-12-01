@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import Card from '@components/ui/Card'
 import Button from '@components/ui/Button'
 import { useEffect, useState } from 'react'
+import ProfileAvatar from '@components/ProfileAvatar'
 
 function isOpenNow(hours: { weekdays: [number, number]; saturday: [number, number] }) {
   const now = new Date()
@@ -45,7 +46,7 @@ export default function HomePage() {
   return (
     <div className="grid gap-8 md:gap-10">
       <div className="text-center grid gap-2">
-        <div className="mx-auto h-28 w-28 rounded-full bg-surface border-2 border-white grid place-items-center text-muted animate-pulse-border">Foto</div>
+        <ProfileAvatar size={112} className="mx-auto animate-pulse-border" />
         <h1 className="font-display text-3xl md:text-4xl text-text">PABLO DO CORTE</h1>
         <div className="mt-6 md:mt-8 text-left">
           <h2 className="font-semibold text-text text-xl md:text-2xl">Olá, {greetingName} <span role="img" aria-label="mão acenando">👋</span></h2>
