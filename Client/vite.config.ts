@@ -7,6 +7,7 @@ export default defineConfig({
   publicDir: '../public',
   resolve: {
     alias: {
+      '@': path.resolve(process.cwd(), 'src'),
       '@components': path.resolve(process.cwd(), 'src/components'),
       '@pages': path.resolve(process.cwd(), 'src/pages'),
       '@context': path.resolve(process.cwd(), 'src/context'),
