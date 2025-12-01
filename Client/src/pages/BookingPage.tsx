@@ -471,7 +471,7 @@ export default function BookingPage() {
             </section>
           )}
 
-          <div className="grid grid-cols-2 gap-2 pt-3 md:pt-4">
+          <div className="sticky bottom-0 bg-[#141414] grid grid-cols-2 gap-2 pt-3 md:pt-4 safe-area-bottom">
             <Button
               variant="outline"
               onClick={prev}

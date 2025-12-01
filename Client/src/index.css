@@ -22,6 +22,10 @@
   html, body { height: 100%; }
   body { @apply bg-gradient-to-b from-bg to-bg-soft text-text font-sans antialiased; }
   a { @apply text-text no-underline; }
+  /* iOS Safari: reservar espaço da barra inferior */
+  @supports (padding: env(safe-area-inset-bottom)) {
+    body { padding-bottom: env(safe-area-inset-bottom); }
+  }
 }
 
 @layer components {
@@ -111,4 +115,10 @@
 
 .animate-pulse-border {
   animation: pulseBorder 3.5s ease-in-out infinite;
+}
+
+/* Utilitário para rodapés com ações: evita sobreposição pela barra do iPhone */
+.safe-area-bottom { padding-bottom: 16px; }
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-area-bottom { padding-bottom: calc(env(safe-area-inset-bottom) + 16px); }
 }
