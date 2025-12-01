@@ -46,7 +46,11 @@ export default function HomePage() {
   return (
     <div className="grid gap-8 md:gap-10">
       <div className="text-center grid gap-2">
-        <ProfileAvatar size={112} className="mx-auto animate-pulse-border" />
+        <ProfileAvatar
+          size={112}
+          className="mx-auto animate-pulse-border"
+          src="/assets/images/profile/profile2.jpg"
+        />
         <h1 className="font-display text-3xl md:text-4xl text-text">PABLO DO CORTE</h1>
         <div className="mt-6 md:mt-8 text-left">
           <h2 className="font-semibold text-text text-xl md:text-2xl">Olá, {greetingName} <span role="img" aria-label="mão acenando">👋</span></h2>
