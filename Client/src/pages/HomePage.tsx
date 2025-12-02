@@ -101,7 +101,7 @@ export default function HomePage() {
           <div className="flex flex-col items-stretch gap-3 md:gap-4">
             <Button
               variant="primary"
-              className="py-3 text-base md:text-lg w-full"
+              className="py-3 text-base md:text-lg w-full btn-schedule"
               onClick={() => (clientName ? navigate('/agendar') : setModalOpen(true))}
             >
               Agendar Horário
