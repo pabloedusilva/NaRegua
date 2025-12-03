@@ -51,6 +51,20 @@
   .site-footer .footer-legal { align-items: flex-start; }
 }
 
+/* Animação sutil de "sacudir" para notificação após agendamento */
+@keyframes shake-soft {
+  0% { transform: translate3d(0, 0, 0); }
+  20% { transform: translate3d(-1px, 0, 0) rotate(-0.5deg); }
+  40% { transform: translate3d(1px, 0, 0) rotate(0.5deg); }
+  60% { transform: translate3d(-1px, 0, 0) rotate(-0.4deg); }
+  80% { transform: translate3d(1px, 0, 0) rotate(0.4deg); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+.shake-once {
+  animation: shake-soft 500ms ease-in-out 1;
+}
+
 /* Animação sutil e minimalista para o botão de agendamento */
 @keyframes pulse-glow {
   0%, 100% {

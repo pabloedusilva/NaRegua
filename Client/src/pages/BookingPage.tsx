@@ -194,6 +194,9 @@ export default function BookingPage() {
     
     setSuccess(true)
     setTimeout(() => {
+      try {
+        localStorage.setItem('justBooked', '1')
+      } catch {}
       setSuccess(false)
       navigate('/')
     }, 3000)

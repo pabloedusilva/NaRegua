@@ -24,6 +24,8 @@ export default function HomePage() {
   const [nameInput, setNameInput] = useState('')
   const [phoneInput, setPhoneInput] = useState('')
   const [errors, setErrors] = useState<{ name?: string; phone?: string }>({})
+  const [bookingsCount, setBookingsCount] = useState<number>(0)
+  const [shake, setShake] = useState<boolean>(false)
 
   useEffect(() => {
     const name = localStorage.getItem('clientName')
@@ -35,6 +37,36 @@ export default function HomePage() {
     }
     if (name) setNameInput(name)
     if (phone) setPhoneInput(phone)
+
+    // Contagem de agendamentos do cliente (localStorage, status scheduled)
+    try {
+      const raw = localStorage.getItem('userBookings')
+      const list = raw ? JSON.parse(raw) : []
+      const phoneDigits = (phone || '').replace(/\D/g, '')
+      const count = Array.isArray(list)
+        ? list.filter((b: any) => {
+            const statusOk = b?.status === 'scheduled'
+            if (!phoneDigits) return statusOk
+            const bDigits = String(b?.clientPhone || '').replace(/\D/g, '')
+            return statusOk && bDigits === phoneDigits
+          }).length
+        : 0
+      setBookingsCount(count)
+    } catch {
+      setBookingsCount(0)
+    }
+
+    // Se acabou de agendar, ativar animação sutil de sacudir
+    try {
+      const just = localStorage.getItem('justBooked')
+      if (just === '1') {
+        setShake(true)
+        setTimeout(() => {
+          setShake(false)
+          localStorage.removeItem('justBooked')
+        }, 900)
+      }
+    } catch {}
   }, [])
 
   const hours: { weekdays: [number, number]; saturday: [number, number] } = { weekdays: [8, 19], saturday: [8, 17] }
@@ -44,7 +76,28 @@ export default function HomePage() {
   const todayFormatted = now.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })
   const timeFormatted = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
   return (
-    <div className="grid gap-8 md:gap-10">
+    <div className="grid gap-8 md:gap-10 relative">
+      {/* Ícone de prancheta no canto superior direito */}
+      <button
+        onClick={() => navigate('/agendamentos')}
+        className={`fixed top-4 right-4 z-10 w-12 h-12 rounded-xl bg-surface border border-border flex items-center justify-center text-gold hover:bg-[#1f1f1f] hover:border-gold/50 hover:-translate-y-0.5 transition-all shadow-lg ${shake ? 'shake-once' : ''}`}
+        aria-label="Ver meus agendamentos"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M9 5a2 2 0 002 2h2a2 2 0 002-2 2 2 0 00-2-2h-2a2 2 0 00-2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+        {bookingsCount > 0 && (
+          <span
+            className="absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1 rounded-full bg-red-500 text-white border border-red-500/80 text-xs font-bold grid place-items-center shadow-[var(--shadow)]"
+            aria-label={`Você tem ${bookingsCount} agendamento(s)`}
+          >
+            {bookingsCount}
+          </span>
+        )}
+      </button>
+
       <div className="text-center grid gap-2">
         <ProfileAvatar
           size={112}
@@ -108,10 +161,15 @@ export default function HomePage() {
             </Button>
             <Button 
               variant="outline" 
-              className="w-full"
+              className={`w-full relative ${shake ? 'shake-once' : ''}`}
               onClick={() => navigate('/agendamentos')}
             >
               Ver agendamentos
+              {bookingsCount > 0 && (
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 min-w-[24px] h-[24px] px-1 rounded-full bg-red-500 text-white border border-red-500/80 text-xs font-bold grid place-items-center">
+                  {bookingsCount}
+                </span>
+              )}
             </Button>
           </div>
         </div>
