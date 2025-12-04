@@ -10,6 +10,7 @@ import Terms from './pages/Legal/Terms'
 import Privacy from './pages/Legal/Privacy'
 import About from './pages/Legal/About'
 import { ProfileProvider } from './context/ProfileContext'
+import NotFoundPage from './pages/NotFoundPage'
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
               <Route path="/termos" element={<Terms />} />
               <Route path="/privacidade" element={<Privacy />} />
               <Route path="/sobre" element={<About />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Layout>
         </MyBookingsProvider>
