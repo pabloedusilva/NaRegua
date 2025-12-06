@@ -7,9 +7,9 @@
   "license": "PROPRIETARY",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:client && npm run build:barber",
-    "build:client": "vite build --config Client/vite.config.ts --outDir dist/client",
-    "build:barber": "vite build --config Barber/vite.config.ts --outDir dist/barber",
+    "build": "vite build",
+    "build:client": "vite build --outDir dist/client",
+    "build:barber": "vite build --outDir dist/barber",
     "preview": "vite preview"
   },
   "dependencies": {
