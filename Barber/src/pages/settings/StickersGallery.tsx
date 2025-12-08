@@ -79,6 +79,7 @@ export default function StickersGallery() {
   const [copiedSticker, setCopiedSticker] = useState<string | null>(null)
   const [selectedSticker, setSelectedSticker] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
+  const [isLoadingImages, setIsLoadingImages] = useState(false)
 
   // Load favorites from localStorage
   useEffect(() => {
@@ -91,6 +92,18 @@ export default function StickersGallery() {
       }
     }
   }, [])
+
+  // Handle category change with loading state
+  useEffect(() => {
+    setIsLoadingImages(true)
+    
+    // Simulate loading time for category switch
+    const timer = setTimeout(() => {
+      setIsLoadingImages(false)
+    }, 500)
+    
+    return () => clearTimeout(timer)
+  }, [selectedCategory])
 
   // Save favorites to localStorage
   useEffect(() => {
@@ -235,7 +248,12 @@ export default function StickersGallery() {
       </div>
 
       {/* Stickers Grid */}
-      <div className="min-h-[400px]">
+      <div className="min-h-[400px] relative">
+        {/* Loading Overlay */}
+        {isLoadingImages && hasStickers && (
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-10 rounded-xl"></div>
+        )}
+
         {!hasStickers ? (
           <div className="card text-center py-12">
             <div className="w-16 h-16 rounded-full bg-surface border border-border flex items-center justify-center mx-auto mb-4">
@@ -254,7 +272,9 @@ export default function StickersGallery() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 animate-fade-in">
+          <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 transition-opacity duration-300 ${
+            isLoadingImages ? 'opacity-0' : 'opacity-100 animate-fade-in'
+          }`}>
             {displayStickers.map((sticker, index) => (
               <div
                 key={index}
@@ -266,6 +286,7 @@ export default function StickersGallery() {
                   src={sticker}
                   alt={`Figurinha ${index + 1}`}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  loading="lazy"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement
                     target.src = '/assets/images/ui/default.jpg'
