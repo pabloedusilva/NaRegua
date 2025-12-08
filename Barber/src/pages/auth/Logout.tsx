@@ -8,7 +8,7 @@ export default function Logout() {
     // TODO: Backend integration - Call logout API
     localStorage.removeItem('barber_auth_demo')
     localStorage.removeItem('barber_remember')
-    navigate('/login')
+    navigate('/admin/login')
   }, [navigate])
 
   return (

@@ -224,7 +224,7 @@ export default function DashboardHome() {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-semibold text-text">Próximos agendamentos</h2>
           <button
-            onClick={() => navigate('/agendamentos')}
+            onClick={() => navigate('/admin/agendamentos')}
             className="text-gold hover:text-gold-600 text-sm font-semibold flex items-center gap-1 transition-colors"
           >
             Ver todos
@@ -248,51 +248,63 @@ export default function DashboardHome() {
             {/* Próximo Agendamento em Destaque */}
             <NextBookingHighlight booking={upcomingBookings[0]} />
 
-            {/* Próximos Agendamentos (2º e 3º) */}
-            {upcomingBookings.slice(1).map((booking, index) => (
-              <div
-                key={booking.id}
-                className="card card-hover flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer"
-                onClick={() => navigate(`/agendamentos/${booking.id}`)}
-                style={{ animationDelay: `${(index + 1) * 0.1}s` }}
-              >
-                <div className="flex items-start gap-4 flex-1">
-                  <div className="w-12 h-12 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-text font-semibold mb-1">{booking.clientName}</h3>
-                    <p className="text-text-dim text-sm mb-2">{booking.serviceName}</p>
-                    <div className="flex flex-wrap items-center gap-3 text-xs text-text-dim">
-                      <span className="flex items-center gap-1">
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        {formatDate(booking.date)}
+            {/* Próximos Agendamentos (2º e 3º) - Estilo Cliente */}
+            {upcomingBookings.slice(1).map((booking, index) => {
+              const dateObj = new Date(booking.date + 'T' + booking.time)
+              const formattedDate = dateObj.toLocaleDateString('pt-BR', { 
+                day: '2-digit', 
+                month: 'short',
+                year: 'numeric'
+              })
+              
+              return (
+                <div
+                  key={booking.id}
+                  className="card hover:border-gold/30 transition"
+                  style={{ animationDelay: `${(index + 1) * 0.1}s` }}
+                >
+                  <div className="grid gap-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="text-lg font-semibold text-text">{booking.time}</div>
+                        <div className="text-sm text-text-dim capitalize">{formattedDate}</div>
+                      </div>
+                      <span className="px-2.5 py-1 rounded-lg text-xs font-medium border bg-blue-400/15 border-blue-400/30 text-blue-400">
+                        Agendado
                       </span>
-                      <span className="flex items-center gap-1">
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        {booking.time}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        {booking.professionalName}
-                      </span>
+                    </div>
+
+                    <div className="grid gap-1.5 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-text-dim">Cliente:</span>
+                        <span className="text-text font-medium">{booking.clientName}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-text-dim">Profissional:</span>
+                        <span className="text-text font-medium">{booking.professionalName}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-text-dim">Serviço:</span>
+                        <span className="text-text font-medium">{booking.serviceName}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-text-dim">Valor:</span>
+                        <span className="text-gold font-semibold">{formatCurrency(booking.price)}</span>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-border grid gap-2">
+                      <button
+                        onClick={() => navigate(`/admin/agendamentos/${booking.id}`)}
+                        className="w-full px-4 py-2 rounded-lg border border-gold/30 text-gold hover:bg-gold/10 hover:border-gold transition-colors text-sm font-medium"
+                      >
+                        Ver detalhes
+                      </button>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 sm:flex-col sm:items-end">
-                  <span className="text-lg font-bold text-gold">{formatCurrency(booking.price)}</span>
-                  <span className="badge badge-scheduled">Agendado</span>
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>

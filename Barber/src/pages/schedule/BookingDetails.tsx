@@ -94,7 +94,7 @@ export default function BookingDetails() {
     return (
       <div className="grid gap-8">
         <button
-          onClick={() => navigate('/agendamentos')}
+          onClick={() => navigate('/admin/agendamentos')}
           className="flex items-center gap-2 text-text-dim hover:text-text transition-colors w-fit"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -129,7 +129,7 @@ export default function BookingDetails() {
       <div className="flex items-center justify-between animate-fade-in">
         <div>
           <button
-            onClick={() => navigate('/agendamentos')}
+            onClick={() => navigate('/admin/agendamentos')}
             className="flex items-center gap-2 text-text-dim hover:text-text transition-colors mb-4"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

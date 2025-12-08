@@ -19,7 +19,7 @@ import StickersGallery from '@barber/pages/settings/StickersGallery'
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: '/admin',
     element: <RootLayout />,
     children: [
       // Auth Routes
@@ -114,16 +114,16 @@ export const router = createBrowserRouter([
         ]
       },
 
-      // Redirect root to dashboard
+      // Redirect /admin root to dashboard
       {
-        path: '/',
-        element: <Navigate to="/dashboard" replace />
+        path: '',
+        element: <Navigate to="/admin/dashboard" replace />
       },
 
       // Catch all - redirect to dashboard
       {
         path: '*',
-        element: <Navigate to="/dashboard" replace />
+        element: <Navigate to="/admin/dashboard" replace />
       }
     ]
   }

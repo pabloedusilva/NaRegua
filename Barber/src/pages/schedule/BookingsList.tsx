@@ -258,7 +258,7 @@ export default function BookingsList() {
         </div>
       </div>
 
-      {/* Bookings List */}
+      {/* Bookings List - Estilo Cliente */}
       {filteredBookings.length === 0 ? (
         <div className="card text-center py-12">
           <div className="w-16 h-16 rounded-full bg-surface border border-border flex items-center justify-center mx-auto mb-4">
@@ -269,64 +269,86 @@ export default function BookingsList() {
           <p className="text-text-dim">Nenhum agendamento encontrado</p>
         </div>
       ) : (
-        <div className="table-container animate-fade-in-delayed">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Cliente</th>
-                <th>Serviço</th>
-                <th>Profissional</th>
-                <th>Data</th>
-                <th>Horário</th>
-                <th>Valor</th>
-                <th>Status</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredBookings.map((booking) => (
-                <tr key={booking.id}>
-                  <td>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-in-delayed">
+          {filteredBookings.map((booking) => {
+            const dateObj = new Date(booking.date + 'T' + booking.time)
+            const formattedDate = dateObj.toLocaleDateString('pt-BR', { 
+              day: '2-digit', 
+              month: 'short',
+              year: 'numeric'
+            })
+            
+            const statusConfig = {
+              scheduled: { label: 'Agendado', color: 'text-blue-400', bg: 'bg-blue-400/15 border-blue-400/30' },
+              completed: { label: 'Concluído', color: 'text-green-400', bg: 'bg-green-400/15 border-green-400/30' },
+              cancelled: { label: 'Cancelado', color: 'text-red-400', bg: 'bg-red-400/15 border-red-400/30' }
+            }
+            const status = statusConfig[booking.status]
+            
+            // Destaca apenas o próximo agendamento
+            const isNextBooking = nextBooking?.id === booking.id
+            
+            return (
+              <div
+                key={booking.id}
+                className={`bg-[#141414] border rounded-2xl shadow-[var(--shadow)] p-5 transition ${
+                  isNextBooking ? 'border-gold/30' : 'border-border'
+                } hover:border-gold/30`}
+              >
+                <div className="grid gap-3">
+                  <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="font-medium text-text">{booking.clientName}</p>
-                      <p className="text-xs text-text-dim">{booking.clientPhone}</p>
+                      <div className="text-lg font-semibold text-text">{booking.time}</div>
+                      <div className="text-sm text-text/70 capitalize">{formattedDate}</div>
                     </div>
-                  </td>
-                  <td className="text-text-dim">{booking.serviceName}</td>
-                  <td className="text-text-dim">{booking.professionalName}</td>
-                  <td className="text-text-dim">{formatDate(booking.date)}</td>
-                  <td className="text-text-dim">{booking.time}</td>
-                  <td className="font-semibold text-gold">{formatCurrency(booking.price)}</td>
-                  <td>{getStatusBadge(booking.status)}</td>
-                  <td>
-                    <div className="flex items-center gap-2">
+                    <span className={`px-2.5 py-1 rounded-lg text-xs font-medium border ${status.bg} ${status.color}`}>
+                      {status.label}
+                    </span>
+                  </div>
+
+                  <div className="grid gap-1.5 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-text/70">Cliente:</span>
+                      <span className="text-text font-medium">{booking.clientName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-text/70">Telefone:</span>
+                      <span className="text-text font-medium">{booking.clientPhone}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-text/70">Profissional:</span>
+                      <span className="text-text font-medium">{booking.professionalName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-text/70">Serviço:</span>
+                      <span className="text-text font-medium">{booking.serviceName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-text/70">Valor:</span>
+                      <span className="text-gold font-semibold">R$ {booking.price.toFixed(2)}</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-border grid gap-2">
+                    <button
+                      onClick={() => navigate(`/admin/agendamentos/${booking.id}`)}
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full font-semibold border bg-transparent text-text border-border transition hover:-translate-y-px w-full"
+                    >
+                      Ver detalhes
+                    </button>
+                    {booking.status === 'scheduled' && (
                       <button
-                        onClick={() => navigate(`/agendamentos/${booking.id}`)}
-                        className="p-2 rounded-lg hover:bg-surface text-text-dim hover:text-text transition-colors"
-                        title="Ver detalhes"
+                        onClick={() => handleCancelBooking(booking.id)}
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full font-semibold border bg-transparent border-red-400/30 text-red-400 hover:bg-red-400/10 hover:border-red-400 transition hover:-translate-y-px w-full"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
+                        Cancelar agendamento
                       </button>
-                      {booking.status === 'scheduled' && (
-                        <button
-                          onClick={() => handleCancelBooking(booking.id)}
-                          className="p-2 rounded-lg hover:bg-red-500/10 text-red-400 hover:text-red-300 transition-colors"
-                          title="Cancelar agendamento"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )
+          })}
         </div>
       )}
 
