@@ -307,7 +307,7 @@ export default function ListServices() {
 
                   {/* Image Gallery */}
                   {showImageGallery && (
-                    <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 max-h-96 overflow-y-auto p-4 bg-surface rounded-xl border border-border">
+                    <div className="mt-4 grid grid-cols-3 sm:grid-cols-4 gap-3 max-h-[60vh] overflow-y-auto p-2 sm:p-4 bg-surface rounded-xl border border-border">
                       {SERVICE_IMAGES.map((img) => (
                         <button
                           key={img}
@@ -316,9 +316,9 @@ export default function ListServices() {
                             setFormData({ ...formData, image: img })
                             setShowImageGallery(false)
                           }}
-                          className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                          className={`min-w-0 aspect-square rounded-lg overflow-hidden border-2 transition-colors ${
                             formData.image === img
-                              ? 'border-gold scale-95'
+                              ? 'border-gold'
                               : 'border-border hover:border-gold/50'
                           }`}
                         >
@@ -326,6 +326,7 @@ export default function ListServices() {
                             src={img}
                             alt="Service image"
                             containerClassName="aspect-square"
+                            className="w-full h-full object-cover"
                           />
                         </button>
                       ))}
