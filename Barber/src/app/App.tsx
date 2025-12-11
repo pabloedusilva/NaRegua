@@ -15,6 +15,7 @@ import ProfessionalsList from '@barber/pages/settings/Staff'
 import WorkingHoursSettings from '@barber/pages/settings/WorkingHours'
 import BarbershopSettings from '@barber/pages/settings/Profile'
 import StickersGallery from '@barber/pages/settings/StickersGallery'
+import PromotionsList from '@barber/pages/promotions/PromotionsList'
 
 export default function App() {
   return (
@@ -53,6 +54,10 @@ export default function App() {
 
       <Route path="figurinhas" element={<DashboardLayout />}>
         <Route index element={<StickersGallery />} />
+      </Route>
+
+      <Route path="promocoes" element={<DashboardLayout />}>
+        <Route index element={<PromotionsList />} />
       </Route>
 
       {/* Redirect empty path to dashboard */}
