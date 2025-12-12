@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import NextBookingHighlight from '@barber/components/bookings/NextBookingHighlight'
 
@@ -129,22 +129,6 @@ export default function DashboardHome() {
     } catch (error) {
       console.error('Error cancelling booking:', error)
     }
-  }
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
-    return date.toLocaleDateString('pt-BR', { 
-      weekday: 'short', 
-      day: '2-digit', 
-      month: 'short' 
-    })
-  }
-
-  const formatCurrency = (value: number) => {
-    return value.toLocaleString('pt-BR', { 
-      style: 'currency', 
-      currency: 'BRL' 
-    })
   }
 
   if (isLoading) {

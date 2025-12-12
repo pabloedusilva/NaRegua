@@ -135,41 +135,6 @@ export default function BookingsList() {
     }
   }
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
-    return date.toLocaleDateString('pt-BR', {
-      weekday: 'short',
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    })
-  }
-
-  const formatCurrency = (value: number) => {
-    return value.toLocaleString('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    })
-  }
-
-  const getStatusBadge = (status: string) => {
-    const badges = {
-      scheduled: 'badge badge-scheduled',
-      completed: 'badge badge-completed',
-      cancelled: 'badge badge-cancelled'
-    }
-    const labels = {
-      scheduled: 'Agendado',
-      completed: 'Concluído',
-      cancelled: 'Cancelado'
-    }
-    return (
-      <span className={badges[status as keyof typeof badges]}>
-        {labels[status as keyof typeof labels]}
-      </span>
-    )
-  }
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
