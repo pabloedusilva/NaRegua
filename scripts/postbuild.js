@@ -23,4 +23,15 @@ const distRoot = path.join(root, 'dist')
 copyDir(distRoot, path.join(root, 'Client', 'dist'))
 copyDir(distRoot, path.join(root, 'Barber', 'dist'))
 
+// Ensure Barber PWA assets are available under /admin/ in dist
+const adminDir = path.join(distRoot, 'admin')
+fs.mkdirSync(adminDir, { recursive: true })
+try {
+  fs.copyFileSync(path.join(root, 'Barber', 'manifest.json'), path.join(adminDir, 'manifest.json'))
+  fs.copyFileSync(path.join(root, 'Barber', 'sw.js'), path.join(adminDir, 'sw.js'))
+  console.log('Postbuild: copied Barber PWA assets to dist/admin')
+} catch (e) {
+  console.warn('Postbuild: could not copy Barber PWA assets:', e?.message)
+}
+
 console.log('Postbuild: mirrored dist -> Client/dist and Barber/dist')

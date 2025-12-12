@@ -2,13 +2,13 @@
   "name": "Régua Máxima - Barbeiro",
   "short_name": "Régua Máxima",
   "description": "Sistema de gerenciamento para barbeiros - Régua Máxima",
-  "start_url": "/",
+  "start_url": "/admin/",
   "display": "fullscreen",
   "display_override": ["fullscreen", "standalone"],
   "background_color": "#0a0a0a",
   "theme_color": "#C9953B",
   "orientation": "portrait-primary",
-  "scope": "/",
+  "scope": "/admin/",
   "icons": [
     {
       "src": "/assets/images/logos/logo.png",

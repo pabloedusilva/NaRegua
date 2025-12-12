@@ -4,12 +4,12 @@ const OFFLINE_URL = '/admin/offline';
 
 // Assets essenciais para cache
 const ESSENTIAL_ASSETS = [
-  '/',
+  '/admin/',
   '/admin/dashboard',
   '/admin/login',
   '/admin/offline',
   '/assets/images/logos/logo.png',
-  '/manifest.json'
+  '/admin/manifest.json'
 ];
 
 // Install event - cacheia assets essenciais

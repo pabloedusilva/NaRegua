@@ -23,7 +23,7 @@
     <meta name="overscroll-behavior" content="none" />
     
     <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
+    <link rel="manifest" href="/admin/manifest.json" crossorigin="use-credentials" />
     
     <!-- iOS Splash Screens -->
     <link rel="apple-touch-startup-image" href="/assets/images/logos/logo.png" />
@@ -57,14 +57,14 @@
     </div>
     
     <div id="root"></div>
-    <script type="module" src="/src/app/index.tsx"></script>
+    <script type="module" src="/Barber/src/app/index.tsx"></script>
     
     <!-- Service Worker Registration -->
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker
-            .register('/sw.js')
+            .register('/admin/sw.js', { scope: '/admin/' })
             .then((registration) => {
               console.log('[SW] Service Worker registered successfully:', registration.scope);
               
