@@ -20,6 +20,15 @@ interface Promotion {
   viewCount?: number;
 }
 
+// Imagens prontas disponíveis para promoções
+const PROMOTION_IMAGES = [
+  '/assets/images/promocoes/1.jpg',
+  '/assets/images/promocoes/2.jpg',
+  '/assets/images/promocoes/3.jpg',
+  '/assets/images/promocoes/4.jpg',
+  '/assets/images/promocoes/5.jpg',
+];
+
 export default function PromotionsList() {
   const { showToast } = useToast();
   const [promotions, setPromotions] = useState<Promotion[]>([]);
@@ -40,7 +49,6 @@ export default function PromotionsList() {
     link: '',
   });
   const [uploadingImage, setUploadingImage] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     document.title = 'Régua Máxima | Dashboard Barbeiro';
@@ -125,16 +133,19 @@ export default function PromotionsList() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Determinar status baseado nas datas
-    const now = new Date();
-    const start = new Date(formData.startDate);
-    const end = new Date(formData.endDate);
+    // Determinar status baseado nas datas (se fornecidas)
     let status: 'active' | 'scheduled' | 'expired' = 'active';
     
-    if (now < start) {
-      status = 'scheduled';
-    } else if (now > end) {
-      status = 'expired';
+    if (formData.startDate && formData.endDate) {
+      const now = new Date();
+      const start = new Date(formData.startDate);
+      const end = new Date(formData.endDate);
+      
+      if (now < start) {
+        status = 'scheduled';
+      } else if (now > end) {
+        status = 'expired';
+      }
     }
     
     const promotionData: Promotion = {
@@ -142,8 +153,8 @@ export default function PromotionsList() {
       title: formData.title,
       description: formData.description,
       image: formData.image || undefined,
-      startDate: formData.startDate,
-      endDate: formData.endDate,
+      startDate: formData.startDate || '',
+      endDate: formData.endDate || '',
       targetAudience: 'clients',
       priority: formData.priority,
       status,
@@ -241,27 +252,17 @@ export default function PromotionsList() {
     reader.readAsDataURL(file);
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
+  const handleImageSelect = (imageUrl: string) => {
+    console.log('Imagem selecionada:', imageUrl);
+    setFormData({ ...formData, image: imageUrl });
+    showToast('Imagem selecionada com sucesso!', 'success');
   };
 
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
+  const isSelected = (imageUrl: string) => {
+    return (formData.image || '') === (imageUrl || '');
   };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      handleImageUpload(file);
-    } else {
-      showToast('Por favor, solte um arquivo de imagem válido.', 'error');
-    }
-  };
+  
 
   const filteredPromotions = promotions.filter(p => {
     const matchesSearch = (p.title?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
@@ -352,10 +353,12 @@ export default function PromotionsList() {
               <p className="text-sm text-text-dim mb-4 line-clamp-2">{promotion.description}</p>
               
               <div className="space-y-1.5 mb-4 text-xs">
-                <div className="flex items-center gap-2 text-text-dim">
-                  <CalendarClock className="w-3.5 h-3.5 text-gold" />
-                  <span>{new Date(promotion.startDate).toLocaleDateString('pt-BR')} - {new Date(promotion.endDate).toLocaleDateString('pt-BR')}</span>
-                </div>
+                {promotion.startDate && promotion.endDate && (
+                  <div className="flex items-center gap-2 text-text-dim">
+                    <CalendarClock className="w-3.5 h-3.5 text-gold" />
+                    <span>{new Date(promotion.startDate).toLocaleDateString('pt-BR')} - {new Date(promotion.endDate).toLocaleDateString('pt-BR')}</span>
+                  </div>
+                )}
                 {promotion.viewCount !== undefined && (
                   <div className="flex items-center gap-2 text-text-dim">
                     <Eye className="w-3.5 h-3.5 text-gold" />
@@ -400,7 +403,9 @@ export default function PromotionsList() {
                 <p className="text-text-dim">Preencha os dados da promoção</p>
               </div>
               <button
-                onClick={() => setModalOpen(false)}
+                onClick={() => {
+                  setModalOpen(false);
+                }}
                 className="w-10 h-10 rounded-full hover:bg-surface flex items-center justify-center text-text-dim hover:text-text transition-colors"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -438,66 +443,20 @@ export default function PromotionsList() {
 
                   <div className="flex flex-col gap-1 w-full">
                     <label className="text-sm text-text/90 mb-2">Imagem da Promoção</label>
-                    
-                    {!formData.image ? (
-                      <div 
-                        className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
-                          isDragging 
-                            ? 'border-gold bg-gold/5' 
-                            : 'border-border hover:border-gold/50'
-                        }`}
-                        onDragOver={handleDragOver}
-                        onDragLeave={handleDragLeave}
-                        onDrop={handleDrop}
-                      >
-                        <input
-                          type="file"
-                          accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              handleImageUpload(file);
-                            }
-                            e.target.value = '';
-                          }}
-                          className="hidden"
-                          id="image-upload"
-                          disabled={uploadingImage}
-                        />
-                        <label
-                          htmlFor="image-upload"
-                          className={`cursor-pointer flex flex-col items-center gap-3 ${uploadingImage ? 'opacity-50 pointer-events-none' : ''}`}
-                        >
-                          <div className="w-16 h-16 rounded-full bg-gold/10 border-2 border-gold/20 flex items-center justify-center">
-                            {uploadingImage ? (
-                              <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin"></div>
-                            ) : (
-                              <Upload className="w-8 h-8 text-gold" />
-                            )}
-                          </div>
-                          <div>
-                            <p className="text-text font-medium mb-1">
-                              {uploadingImage ? 'Carregando...' : isDragging ? 'Solte a imagem aqui' : 'Clique ou arraste uma imagem'}
-                            </p>
-                            <p className="text-xs text-text-dim">PNG, JPG, GIF ou WEBP (máx. 5MB)</p>
-                          </div>
-                        </label>
-                      </div>
-                    ) : (
-                      <div className="relative">
-                        <div className="w-full h-64 rounded-xl overflow-hidden bg-surface border-2 border-border">
+
+                    {/* Preview da imagem selecionada (se houver) */}
+                    {formData.image && (
+                      <div className="relative mb-4">
+                        <div className="w-full h-72 rounded-xl overflow-hidden bg-surface border-2 border-border">
                           <img
                             src={formData.image}
                             alt="Preview"
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        
-                        {/* Informações da imagem */}
                         <div className="mt-2 flex items-center justify-end text-xs text-text-dim">
                           <span>{Math.round((formData.image.length * 3) / 4 / 1024)}KB</span>
                         </div>
-                        
                         <button
                           type="button"
                           onClick={() => setFormData({ ...formData, image: '' })}
@@ -508,51 +467,148 @@ export default function PromotionsList() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            document.getElementById('image-upload-change')?.click();
-                          }}
-                          className="mt-3 w-full btn btn-outline"
-                          disabled={uploadingImage}
-                        >
-                          <Upload className="w-4 h-4" />
-                          {uploadingImage ? 'Carregando...' : 'Alterar Imagem'}
-                        </button>
-                        <input
-                          type="file"
-                          accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              handleImageUpload(file);
-                            }
-                            // Limpar o input para permitir selecionar a mesma imagem novamente
-                            e.target.value = '';
-                          }}
-                          className="hidden"
-                          id="image-upload-change"
-                          disabled={uploadingImage}
-                        />
                       </div>
                     )}
+
+                    {/* Galeria dinâmica com rolagem lateral */}
+                    <div className="p-5 bg-background rounded-xl border border-border">
+                      <h4 className="text-sm font-medium text-text mb-4 flex items-center gap-2">
+                        <ImageIcon className="w-4 h-4 text-gold" />
+                        Escolha uma imagem
+                      </h4>
+
+                      {/* Input de upload oculto controlado pelo tile de Upload */}
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleImageUpload(file);
+                          }
+                          e.target.value = '';
+                        }}
+                        className="hidden"
+                        id="image-upload-inline"
+                        disabled={uploadingImage}
+                      />
+
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                          {/* Tile: Sem imagem */}
+                          <button
+                            type="button"
+                            onClick={() => handleImageSelect('')}
+                            className={`relative aspect-square rounded-xl border-2 transition-all bg-surface flex items-center justify-center group overflow-hidden ${isSelected('') ? 'border-gold ring-2 ring-gold/40' : 'border-border hover:border-gold'}`}
+                            title="Sem imagem"
+                          >
+                            <div className="flex flex-col items-center">
+                              <ImageIcon className="w-7 h-7 text-text-dim group-hover:text-gold" />
+                              <span className="mt-1.5 text-xs text-text-dim group-hover:text-text">Sem imagem</span>
+                            </div>
+                            {isSelected('') && (
+                              <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-gold/90 text-black flex items-center justify-center shadow">
+                                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                              </div>
+                            )}
+                          </button>
+
+                          {/* Tile: Upload */}
+                          <button
+                            type="button"
+                            onClick={() => document.getElementById('image-upload-inline')?.click()}
+                            className={`relative aspect-square rounded-xl border-2 transition-all bg-surface flex items-center justify-center group overflow-hidden ${isSelected(formData.image) && formData.image && !PROMOTION_IMAGES.includes(formData.image) ? 'border-gold ring-2 ring-gold/40' : 'border-border hover:border-gold'}`}
+                            disabled={uploadingImage}
+                            title="Enviar imagem"
+                          >
+                            <div className="flex flex-col items-center">
+                              {uploadingImage ? (
+                                <div className="w-7 h-7 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+                              ) : (
+                                <Upload className="w-7 h-7 text-gold" />
+                              )}
+                              <span className="mt-1.5 text-xs text-text-dim group-hover:text-text">
+                                {uploadingImage ? 'Carregando...' : 'Enviar imagem'}
+                              </span>
+                              <span className="text-[10px] text-text-dim mt-1">PNG, JPG, GIF, WEBP (máx. 5MB)</span>
+                            </div>
+                            {isSelected(formData.image) && formData.image && !PROMOTION_IMAGES.includes(formData.image) && (
+                              <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-gold/90 text-black flex items-center justify-center shadow">
+                                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                              </div>
+                            )}
+                          </button>
+
+                          {/* Tiles: Imagens prontas */}
+                          {PROMOTION_IMAGES.map((imageUrl, index) => (
+                            <button
+                              key={index}
+                              type="button"
+                              onClick={() => handleImageSelect(imageUrl)}
+                              className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all group ${isSelected(imageUrl) ? 'border-gold ring-2 ring-gold/40' : 'border-border hover:border-gold'}`}
+                              title={`Selecionar imagem ${index + 1}`}
+                            >
+                              <img src={imageUrl} alt={`Promoção ${index + 1}`} className="w-full h-full object-cover" />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-2">
+                                <span className="text-white text-xs font-medium">Selecionar</span>
+                              </div>
+                              {isSelected(imageUrl) && (
+                                <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-gold/90 text-black flex items-center justify-center shadow">
+                                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M20 6L9 17l-5-5" />
+                                  </svg>
+                                </div>
+                              )}
+                            </button>
+                          ))}
+                      </div>
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Input
-                      label="Data de Início"
-                      type="date"
-                      value={formData.startDate}
-                      onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                      required
-                    />
-                    <Input
-                      label="Data de Término"
-                      type="date"
-                      value={formData.endDate}
-                      onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                      required
-                    />
+                    <div className="relative">
+                      <Input
+                        label="Data de Início (opcional)"
+                        type="date"
+                        value={formData.startDate}
+                        onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                      />
+                      {formData.startDate && (
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, startDate: '' })}
+                          className="absolute top-[38px] right-3 w-5 h-5 rounded-full bg-surface hover:bg-red-500/20 border border-border hover:border-red-500/40 flex items-center justify-center text-text-dim hover:text-red-400 transition-all"
+                          title="Limpar data"
+                        >
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                    <div className="relative">
+                      <Input
+                        label="Data de Término (opcional)"
+                        type="date"
+                        value={formData.endDate}
+                        onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                      />
+                      {formData.endDate && (
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, endDate: '' })}
+                          className="absolute top-[38px] right-3 w-5 h-5 rounded-full bg-surface hover:bg-red-500/20 border border-border hover:border-red-500/40 flex items-center justify-center text-text-dim hover:text-red-400 transition-all"
+                          title="Limpar data"
+                        >
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 gap-6">
@@ -612,7 +668,9 @@ export default function PromotionsList() {
               </div>
 
               <div className="flex gap-3 justify-end">
-                <button type="button" onClick={() => setModalOpen(false)} className="btn btn-outline">
+                <button type="button" onClick={() => {
+                  setModalOpen(false);
+                }} className="btn btn-outline">
                   Cancelar
                 </button>
                 <button type="submit" className="btn btn-primary">
@@ -626,7 +684,7 @@ export default function PromotionsList() {
 
       {previewPromotion && (
         <div className="modal-overlay" onClick={() => setPreviewPromotion(null)}>
-          <div className="modal-content p-6 w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content p-6 w-full max-w-xl md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-display text-2xl text-gold">{previewPromotion.title}</h2>
               <button
@@ -644,7 +702,7 @@ export default function PromotionsList() {
                 <img 
                   src={previewPromotion.image} 
                   alt={previewPromotion.title}
-                  className="w-full h-auto object-cover"
+                  className="w-full h-auto object-cover max-h-[48vh]"
                 />
               </div>
             )}
@@ -653,12 +711,14 @@ export default function PromotionsList() {
               {previewPromotion.description}
             </p>
 
-            <div className="flex items-center gap-2 text-sm text-text-dim mb-6">
-              <CalendarClock className="w-4 h-4 text-gold" />
-              <span>
-                Válido de {new Date(previewPromotion.startDate).toLocaleDateString('pt-BR')} até {new Date(previewPromotion.endDate).toLocaleDateString('pt-BR')}
-              </span>
-            </div>
+            {previewPromotion.startDate && previewPromotion.endDate && (
+              <div className="flex items-center gap-2 text-sm text-text-dim mb-6">
+                <CalendarClock className="w-4 h-4 text-gold" />
+                <span>
+                  Válido de {new Date(previewPromotion.startDate).toLocaleDateString('pt-BR')} até {new Date(previewPromotion.endDate).toLocaleDateString('pt-BR')}
+                </span>
+              </div>
+            )}
 
             <div className="flex gap-3">
               {previewPromotion.link && (
