@@ -1,5 +1,5 @@
 // Service Worker para Régua Máxima - Barber App
-const CACHE_NAME = 'regua-maxima-barber-v1';
+const CACHE_NAME = 'regua-maxima-barber-v2';
 const OFFLINE_URL = '/admin/offline';
 
 // Assets essenciais para cache
@@ -8,7 +8,8 @@ const ESSENTIAL_ASSETS = [
   '/admin/dashboard',
   '/admin/login',
   '/admin/offline',
-  '/assets/images/logos/logo.png'
+  '/assets/images/logos/logo.png',
+  '/manifest.json'
 ];
 
 // Install event - cacheia assets essenciais

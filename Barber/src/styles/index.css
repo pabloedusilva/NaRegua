@@ -19,16 +19,57 @@
 }
 
 @layer base {
-  html, body { height: 100%; }
-  body { 
-    @apply bg-gradient-to-b from-bg to-bg-soft text-text font-sans antialiased; 
+  html, body { 
+    height: 100%; 
+    width: 100%;
+    overflow-x: hidden;
+    /* Prevenir zoom no iOS */
+    touch-action: manipulation;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
   }
+  
+  body { 
+    @apply bg-gradient-to-b from-bg to-bg-soft text-text font-sans antialiased;
+    /* Prevenir pull-to-refresh no mobile */
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    position: fixed;
+    width: 100%;
+  }
+  
+  #root {
+    height: 100vh;
+    height: 100dvh;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  
   a { @apply text-text no-underline; }
   
-  /* iOS Safe Area Support */
-  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+  /* iOS Safe Area Support - Suporte para notch/dynamic island */
+  @supports (padding: env(safe-area-inset-top)) {
     body {
+      padding-top: env(safe-area-inset-top);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
       padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+  
+  /* PWA Fullscreen: Prevenir comportamentos de navegador */
+  @media (display-mode: fullscreen), (display-mode: standalone) {
+    body {
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    
+    /* Permitir seleção de texto em inputs e áreas editáveis */
+    input, textarea, [contenteditable] {
+      user-select: text;
+      -webkit-user-select: text;
     }
   }
 }
@@ -256,4 +297,109 @@
   .drawer-inner {
     padding: 1rem;
   }
+}
+
+/* ============================================
+   PWA Specific Styles - Mobile Native Experience
+   ============================================ */
+
+/* Usa variável CSS customizada para altura de viewport */
+.pwa-standalone #root {
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+/* iOS Standalone - Remove bounce effect */
+.ios-standalone body {
+  position: fixed;
+  overflow: hidden;
+}
+
+.ios-standalone #root {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Android Standalone - Melhorias específicas */
+.android-standalone {
+  /* Esconde endereço de URL caso apareça */
+  overflow: hidden;
+}
+
+/* Prevenir pull-to-refresh visualmente */
+.pwa-standalone body {
+  overscroll-behavior-y: contain;
+}
+
+/* Status bar spacer para iOS */
+.ios-standalone .app-header,
+.ios-standalone .dashboard-header {
+  padding-top: max(env(safe-area-inset-top), 0.5rem);
+}
+
+/* Botão de voltar do iOS */
+.ios-standalone .back-button {
+  padding-left: max(env(safe-area-inset-left), 1rem);
+}
+
+/* Tab bar inferior - considera safe area */
+.pwa-standalone .bottom-nav,
+.pwa-standalone .tab-bar {
+  padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+}
+
+/* Esconde elementos que não fazem sentido em PWA */
+.pwa-standalone .install-prompt,
+.pwa-standalone .browser-notice {
+  display: none !important;
+}
+
+/* Otimizações de performance para animações em PWA */
+@media (display-mode: standalone) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Melhora performance de scroll */
+  .scroll-container,
+  .list-container {
+    will-change: scroll-position;
+    transform: translateZ(0);
+  }
+  
+  /* Animações mais suaves */
+  .animated,
+  .transition {
+    will-change: transform, opacity;
+  }
+}
+
+/* Loading spinner inicial - enquanto carrega o PWA */
+#splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, #0f0f10, #121212);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.3s ease-out;
+}
+
+#splash-screen .logo {
+  width: 120px;
+  height: 120px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(0.95); }
 }
