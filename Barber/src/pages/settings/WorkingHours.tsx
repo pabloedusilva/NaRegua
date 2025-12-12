@@ -54,6 +54,7 @@ export default function WorkingHours() {
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
+    document.title = 'Régua Máxima | Dashboard Barbeiro';
     loadHours()
   }, [])
 

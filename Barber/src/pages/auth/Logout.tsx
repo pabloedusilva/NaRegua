@@ -5,6 +5,7 @@ export default function Logout() {
   const navigate = useNavigate()
 
   useEffect(() => {
+    document.title = 'Régua Máxima | Dashboard Barbeiro';
     // TODO: Backend integration - Call logout API
     localStorage.removeItem('barber_auth_demo')
     localStorage.removeItem('barber_remember')

@@ -1,9 +1,59 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Footer from '@barber/components/layout/Footer'
+import InstallPWAModal from '@barber/components/dialogs/InstallPWAModal'
+import { usePWAInstall } from '@barber/hooks/usePWAInstall'
+import { useOfflineDetection } from '@barber/hooks/useOfflineDetection'
 
 export default function DashboardLayout() {
   const navigate = useNavigate()
   const [showLogoutMenu, setShowLogoutMenu] = useState(false)
+  const [showPWAModal, setShowPWAModal] = useState(false)
+  
+  const { canInstall, isInstalled, promptInstall, isStandalone } = usePWAInstall()
+  
+  // Detecta quando o usuário fica offline
+  useOfflineDetection()
+
+  // Mostra o modal automaticamente após 3 segundos se o PWA não estiver instalado
+  useEffect(() => {
+    // Não mostra se já estiver instalado ou em modo standalone
+    if (isInstalled || isStandalone) {
+      return;
+    }
+
+    // Verifica se o usuário já viu o modal (não mostrar sempre)
+    const hasSeenModal = localStorage.getItem('pwa_modal_seen');
+    const lastShown = localStorage.getItem('pwa_modal_last_shown');
+    const now = Date.now();
+    
+    // Mostra o modal se:
+    // 1. Nunca viu o modal OU
+    // 2. Já se passaram mais de 7 dias desde a última vez
+    const shouldShow = !hasSeenModal || 
+      (lastShown && (now - parseInt(lastShown)) > 7 * 24 * 60 * 60 * 1000);
+
+    if (shouldShow) {
+      const timer = setTimeout(() => {
+        setShowPWAModal(true);
+        localStorage.setItem('pwa_modal_seen', 'true');
+        localStorage.setItem('pwa_modal_last_shown', now.toString());
+      }, 3000); // 3 segundos após o login
+
+      return () => clearTimeout(timer);
+    }
+  }, [isInstalled, isStandalone]);
+
+  const handleInstallPWA = async () => {
+    const installed = await promptInstall();
+    if (installed) {
+      setShowPWAModal(false);
+    }
+  };
+
+  const handleClosePWAModal = () => {
+    setShowPWAModal(false);
+  }
 
   const handleLogout = () => {
     // TODO: Backend integration - Call logout API
@@ -60,6 +110,15 @@ export default function DashboardLayout() {
       )
     },
     {
+      label: 'Promoções',
+      path: '/admin/promocoes',
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+        </svg>
+      )
+    },
+    {
       label: 'Configurações',
       path: '/admin/configuracoes',
       icon: (
@@ -95,7 +154,7 @@ export default function DashboardLayout() {
               />
               <div>
                 <h2 className="font-display text-gold text-xl">Régua Máxima</h2>
-                <p className="text-text-dim text-xs">Dashboard Admin</p>
+                <p className="text-text-dim text-xs">Dashboard Barbeiro</p>
               </div>
             </div>
           </div>
@@ -265,9 +324,20 @@ export default function DashboardLayout() {
         </header>
 
         {/* Page Content */}
-        <main className="p-4 md:p-6 lg:p-8 pb-24 lg:pb-8">
+        <main className="p-4 md:p-6 lg:p-8 pb-28 lg:pb-20">
           <Outlet />
         </main>
+
+        {/* Footer */}
+        <Footer />
+
+        {/* PWA Install Modal */}
+        <InstallPWAModal
+          isOpen={showPWAModal}
+          onClose={handleClosePWAModal}
+          onInstall={handleInstallPWA}
+          canInstall={canInstall}
+        />
       </div>
     </div>
   )

@@ -2,8 +2,19 @@
 <html lang="pt-BR" class="bg-bg text-text">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Régua Máxima | Dashboard Barbeiro</title>
+    <meta name="description" content="Sistema de gerenciamento para barbeiros - Régua Máxima" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#C9953B" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Régua Máxima" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico" />
@@ -18,5 +29,27 @@
   <body class="min-h-dvh bg-gradient-to-b from-bg to-bg-soft text-text">
     <div id="root"></div>
     <script type="module" src="/src/app/index.tsx"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {
+              console.log('[SW] Service Worker registered successfully:', registration.scope);
+              
+              // Verifica atualizações periodicamente
+              setInterval(() => {
+                registration.update();
+              }, 60000); // A cada 1 minuto
+            })
+            .catch((error) => {
+              console.error('[SW] Service Worker registration failed:', error);
+            });
+        });
+      }
+    </script>
   </body>
 </html>
+

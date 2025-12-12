@@ -1,6 +1,11 @@
+import { useEffect } from 'react'
 import LoginForm from '@barber/features/auth/components/LoginForm'
 
 export default function Login() {
+  useEffect(() => {
+    document.title = 'Régua Máxima | Dashboard Barbeiro';
+  }, []);
+
   return (
     <div className="min-h-dvh flex flex-col items-center justify-between p-4 sm:p-6">
       <div className="flex-1 flex items-center justify-center w-full">
@@ -15,7 +20,7 @@ export default function Login() {
               />
             </div>
             <h1 className="font-display text-4xl sm:text-5xl text-gold mb-2 tracking-wide">
-              Dashboard Admin
+              Dashboard Barbeiro
             </h1>
             <p className="text-text-dim text-sm sm:text-base">
               Acesse o painel administrativo da sua barbearia

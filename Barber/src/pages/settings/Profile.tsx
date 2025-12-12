@@ -42,6 +42,7 @@ export default function Profile() {
   const [showAvatarGallery, setShowAvatarGallery] = useState(false)
 
   useEffect(() => {
+    document.title = 'Régua Máxima | Dashboard Barbeiro';
     loadProfile()
   }, [])
 

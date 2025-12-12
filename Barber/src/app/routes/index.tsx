@@ -17,6 +17,9 @@ import WorkingHoursSettings from '@barber/pages/settings/WorkingHours'
 import BarbershopSettings from '@barber/pages/settings/Profile'
 import StickersGallery from '@barber/pages/settings/StickersGallery'
 
+// Other Pages
+import OfflinePage from '@barber/pages/offline/OfflinePage'
+
 export const router = createBrowserRouter([
   {
     path: '/admin',
@@ -112,6 +115,12 @@ export const router = createBrowserRouter([
             element: <StickersGallery />
           }
         ]
+      },
+
+      // Offline page (without layout)
+      {
+        path: 'offline',
+        element: <OfflinePage />
       },
 
       // Redirect /admin root to dashboard

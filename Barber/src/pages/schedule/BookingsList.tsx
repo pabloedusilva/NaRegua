@@ -35,6 +35,7 @@ export default function BookingsList() {
   const [bookingToCancel, setBookingToCancel] = useState<string | null>(null)
 
   useEffect(() => {
+    document.title = 'Régua Máxima | Dashboard Barbeiro';
     loadBookings()
   }, [])
 

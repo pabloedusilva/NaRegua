@@ -1,0 +1,136 @@
+@import './animations.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Brand base styles aligned with landing page */
+:root {
+  --gold: #c9953b;
+  --gold-600: #b3812f;
+  --bg: #0f0f10;
+  --bg-soft: #121212;
+  --text: #f7f7f5;
+  --text-dim: #cfcfcb;
+  --muted: #8b8b86;
+  --surface: #1c1c1c;
+  --border: #2a2a2a;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+  --wa: #25D366;
+  --wa-700: #1ebe57;
+  
+  /* Aliases for backward compatibility */
+  --background: #0f0f10;
+  --text-muted: #8b8b86;
+}
+
+@layer base {
+  html, body { height: 100%; }
+  body { 
+    @apply bg-gradient-to-b from-bg to-bg-soft text-text font-sans antialiased; 
+  }
+  a { @apply text-text no-underline; }
+  
+  /* iOS Safe Area Support */
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    body {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+}
+
+@layer components {
+  /* Button Styles */
+  .btn { 
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full font-semibold border border-border transition-all duration-200; 
+    position: relative;
+  }
+  .btn:hover { @apply -translate-y-px shadow-lg; }
+  .btn-primary { @apply bg-gold text-[#1b1408] border-gold hover:bg-gold-600; }
+  .btn-outline { @apply bg-transparent text-text border-border hover:bg-surface; }
+  .btn-danger { @apply bg-red-600 text-white border-red-600 hover:bg-red-700; }
+  .btn-success { @apply bg-green-600 text-white border-green-600 hover:bg-green-700; }
+  .btn-text { @apply inline-flex items-center justify-center gap-2; }
+  .btn-spinner { @apply absolute inset-0 flex items-center justify-center; }
+  
+  /* Card Styles */
+  .card { 
+    @apply bg-[#141414] border border-border rounded-2xl shadow-[var(--shadow)] p-5 transition-all duration-200; 
+  }
+  .card-hover:hover { @apply border-gold/30 shadow-2xl; }
+  
+  /* Stat Card */
+  .stat-card {
+    @apply card p-6 flex flex-col gap-3;
+  }
+  
+  /* Modal Styles */
+  .modal-overlay {
+    @apply fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4;
+  }
+  .modal-content {
+    @apply bg-[#141414] border border-border rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto;
+  }
+  .modal-fullscreen {
+    @apply fixed inset-0 bg-bg z-50 overflow-y-auto;
+  }
+  
+  /* Table Styles */
+  .table-container {
+    @apply overflow-x-auto rounded-xl border border-border;
+  }
+  .table {
+    @apply w-full text-left;
+  }
+  .table thead {
+    @apply bg-surface border-b border-border;
+  }
+  .table th {
+    @apply px-4 py-3 text-sm font-semibold text-text-dim;
+  }
+  .table td {
+    @apply px-4 py-3 text-sm border-b border-border/50;
+  }
+  .table tbody tr:hover {
+    @apply bg-surface/50;
+  }
+  
+  /* Badge Styles */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold;
+  }
+  .badge-scheduled { @apply bg-blue-500/20 text-blue-400 border border-blue-500/30; }
+  .badge-completed { @apply bg-green-500/20 text-green-400 border border-green-500/30; }
+  .badge-cancelled { @apply bg-red-500/20 text-red-400 border border-red-500/30; }
+  .badge-pending { @apply bg-yellow-500/20 text-yellow-400 border border-yellow-500/30; }
+}
+
+/* Brand logo sizing */
+.brand-logo { width: 110px; height: auto; object-fit: contain; }
+@media (min-width: 1100px) { .brand-logo { width: 125px; } }
+@media (max-width: 480px) { .brand-logo { width: 85px; } }
+
+/* Mobile Bottom Navigation - Modern & Minimalist */
+@media (max-width: 1023px) {
+  /* iOS Safe Area Padding */
+  .pb-safe {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+  
+  /* Smooth tap feedback */
+  nav a {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+  
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -42,7 +42,7 @@ export default function DashboardHome() {
   const [bookingToCancel, setBookingToCancel] = useState<string | null>(null)
 
   useEffect(() => {
-    document.title = 'Régua Máxima | Dashboard Admin'
+    document.title = 'Régua Máxima | Dashboard Barbeiro'
   }, [])
 
   useEffect(() => {

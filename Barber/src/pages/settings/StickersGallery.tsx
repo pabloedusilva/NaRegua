@@ -83,6 +83,7 @@ export default function StickersGallery() {
 
   // Load favorites from localStorage
   useEffect(() => {
+    document.title = 'Régua Máxima | Dashboard Barbeiro';
     const savedFavorites = localStorage.getItem('sticker_favorites')
     if (savedFavorites) {
       try {

@@ -29,6 +29,7 @@ export default function Staff() {
   })
 
   useEffect(() => {
+    document.title = 'Régua Máxima | Dashboard Barbeiro';
     loadProfessionals()
   }, [])
 

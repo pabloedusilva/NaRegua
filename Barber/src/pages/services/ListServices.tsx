@@ -65,6 +65,7 @@ export default function ListServices() {
   const [showImageGallery, setShowImageGallery] = useState(false)
 
   useEffect(() => {
+    document.title = 'Régua Máxima | Dashboard Barbeiro';
     loadServices()
   }, [])
 

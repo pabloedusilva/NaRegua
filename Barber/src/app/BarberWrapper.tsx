@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import App from './App'
+import { ToastProvider } from './providers/ToastProvider'
 import '../styles/index.css'
 
 export default function BarberWrapper() {
@@ -11,5 +12,9 @@ export default function BarberWrapper() {
     }
   }, [])
 
-  return <App />
+  return (
+    <ToastProvider>
+      <App />
+    </ToastProvider>
+  )
 }

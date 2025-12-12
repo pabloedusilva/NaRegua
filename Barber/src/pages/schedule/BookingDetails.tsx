@@ -28,6 +28,7 @@ export default function BookingDetails() {
   const [showCancelModal, setShowCancelModal] = useState(false)
 
   useEffect(() => {
+    document.title = 'Régua Máxima | Dashboard Barbeiro';
     loadBooking()
   }, [id])
 
