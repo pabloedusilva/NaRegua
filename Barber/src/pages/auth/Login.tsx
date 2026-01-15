@@ -7,7 +7,7 @@ export default function Login() {
   }, []);
 
   return (
-    <div className="min-h-dvh flex flex-col items-center justify-between p-4 sm:p-6">
+    <div className="min-h-full flex flex-col items-center justify-between p-4 sm:p-6">
       <div className="flex-1 flex items-center justify-center w-full">
         <div className="w-full max-w-md">
           {/* Logo e Header */}
