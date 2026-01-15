@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import NextBookingHighlight from '@barber/components/bookings/NextBookingHighlight'
+import { createPortal } from 'react-dom'
 
 // TODO: Backend Integration
 // GET /api/bookings - List all bookings with filters
@@ -404,8 +405,9 @@ export default function BookingsList() {
 
       {/* Cancel Confirmation Modal */}
       {bookingToCancel && (
-        <div className="modal-overlay" onClick={() => setBookingToCancel(null)}>
-          <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+        createPortal(
+          <div className="modal-overlay" onClick={() => setBookingToCancel(null)}>
+            <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-xl font-semibold text-text mb-4">Cancelar Agendamento</h3>
             <p className="text-text-dim mb-6">
               Tem certeza que deseja cancelar este agendamento? Esta ação não pode ser desfeita.
@@ -424,8 +426,10 @@ export default function BookingsList() {
                 Cancelar Agendamento
               </button>
             </div>
-          </div>
-        </div>
+            </div>
+          </div>,
+          document.body
+        )
       )}
     </div>
   )

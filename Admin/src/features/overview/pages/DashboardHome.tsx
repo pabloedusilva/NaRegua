@@ -25,7 +25,7 @@ interface Activity {
 }
 
 export default function DashboardHome() {
-  const [stats, setStats] = useState<DashboardStats>({
+  const [stats] = useState<DashboardStats>({
     totalBarbershops: 48,
     totalBarbers: 156,
     totalClients: 2847,

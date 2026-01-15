@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { createPortal } from 'react-dom'
 
 // TODO: Backend Integration
 // GET /api/bookings/:id - Get booking details
@@ -237,8 +238,9 @@ export default function BookingDetails() {
 
       {/* Cancel Modal */}
       {showCancelModal && (
-        <div className="modal-overlay" onClick={() => setShowCancelModal(false)}>
-          <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+        createPortal(
+          <div className="modal-overlay" onClick={() => setShowCancelModal(false)}>
+            <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-xl font-semibold text-text mb-4">Confirmar Cancelamento</h3>
             <p className="text-text-dim mb-6">
               Tem certeza que deseja cancelar este agendamento? O cliente {booking.clientName} será notificado.
@@ -257,8 +259,10 @@ export default function BookingDetails() {
                 Confirmar Cancelamento
               </button>
             </div>
-          </div>
-        </div>
+            </div>
+          </div>,
+          document.body
+        )
       )}
     </div>
   )

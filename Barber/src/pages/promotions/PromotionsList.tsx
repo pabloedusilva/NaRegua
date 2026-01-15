@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useToast } from '../../app/providers/ToastProvider';
 import { Tag, CalendarClock, Eye, Image as ImageIcon, ExternalLink, Search, Plus, Edit, Trash2, Upload } from 'lucide-react';
+import { createPortal } from 'react-dom';
 import ImageWithFallback from '../../components/ui/ImageWithFallback';
 import Badge from '../../components/ui/Badge';
 import Input from '../../components/ui/Input';
@@ -397,8 +398,9 @@ export default function PromotionsList() {
       )}
 
       {modalOpen && (
-        <div className="modal-fullscreen">
-          <div className="max-w-4xl mx-auto p-4 md:p-8">
+        createPortal(
+          <div className="modal-fullscreen">
+            <div className="max-w-4xl mx-auto p-4 md:p-8">
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h2 className="font-display text-3xl md:text-4xl text-gold mb-2">
@@ -654,13 +656,16 @@ export default function PromotionsList() {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
+            </div>
+          </div>,
+          document.body
+        )
       )}
 
       {previewPromotion && (
-        <div className="modal-overlay" onClick={() => setPreviewPromotion(null)}>
-          <div className="modal-content p-6 w-full max-w-xl md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-xl" onClick={(e) => e.stopPropagation()}>
+        createPortal(
+          <div className="modal-overlay" onClick={() => setPreviewPromotion(null)}>
+            <div className="modal-content p-6 w-full max-w-xl md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-display text-2xl text-gold">{previewPromotion.title}</h2>
               <button
@@ -714,13 +719,16 @@ export default function PromotionsList() {
                 Fechar
               </button>
             </div>
-          </div>
-        </div>
+            </div>
+          </div>,
+          document.body
+        )
       )}
 
       {deleteId && (
-        <div className="modal-overlay" onClick={() => setDeleteId(null)}>
-          <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+        createPortal(
+          <div className="modal-overlay" onClick={() => setDeleteId(null)}>
+            <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-xl font-semibold text-text mb-4">Excluir Promoção</h3>
             <p className="text-text-dim mb-6">
               Tem certeza que deseja excluir esta promoção? Esta ação não pode ser desfeita.
@@ -729,8 +737,10 @@ export default function PromotionsList() {
               <button onClick={() => setDeleteId(null)} className="btn btn-outline flex-1">Cancelar</button>
               <button onClick={() => handleDelete(deleteId)} className="btn btn-danger flex-1">Excluir</button>
             </div>
-          </div>
-        </div>
+            </div>
+          </div>,
+          document.body
+        )
       )}
     </div>
   );

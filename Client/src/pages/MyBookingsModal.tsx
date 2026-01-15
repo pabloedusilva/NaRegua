@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useMyBookings } from '@context/MyBookingsContext'
 import PhoneVerificationModal from '@components/PhoneVerificationModal'
 import MyBookingsPage from './MyBookingsPage'
+import { createPortal } from 'react-dom'
 
 /**
  * Wrapper component for My Bookings feature
@@ -40,9 +41,10 @@ export default function MyBookingsModal() {
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-bg grid">
-      <div className="relative w-full h-dvh overflow-y-auto">
-        <div className="absolute top-3 left-3 z-10">
+    createPortal(
+      <div className="fixed inset-0 z-[2147483647] bg-bg grid">
+        <div className="relative w-full h-dvh overflow-y-auto">
+          <div className="absolute top-3 left-3 z-10">
           <button
             className="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-border bg-surface text-text hover:-translate-y-px transition"
             onClick={() => navigate('/')}
@@ -53,10 +55,12 @@ export default function MyBookingsModal() {
             </svg>
           </button>
         </div>
-        <div className="max-w-6xl mx-auto w-full px-4 py-6 md:py-8">
-          <MyBookingsPage />
+          <div className="max-w-6xl mx-auto w-full px-4 py-6 md:py-8">
+            <MyBookingsPage />
+          </div>
         </div>
-      </div>
-    </div>
+      </div>,
+      document.body
+    )
   )
 }

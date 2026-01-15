@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Trash2 } from 'lucide-react'
 // image fallback handled via ImageWithFallback
 import { formatPhone } from '../../utils/format'
@@ -430,8 +431,9 @@ export default function Profile() {
 
       {/* Edit Modal - Fullscreen */}
       {modalOpen && (
-        <div className="modal-fullscreen">
-          <div className="max-w-2xl mx-auto p-4 md:p-8">
+        createPortal(
+          <div className="modal-fullscreen">
+            <div className="max-w-2xl mx-auto p-4 md:p-8">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div>
@@ -579,14 +581,17 @@ export default function Profile() {
                 </button>
               </div>
             </div>
-          </div>
-        </div>
+            </div>
+          </div>,
+          document.body
+        )
       )}
 
       {/* Clear Cache Confirmation Modal */}
       {showClearCacheModal && (
-        <div className="modal-overlay" onClick={() => setShowClearCacheModal(false)}>
-          <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+        createPortal(
+          <div className="modal-overlay" onClick={() => setShowClearCacheModal(false)}>
+            <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-xl font-semibold text-text mb-4">Limpar Cache</h3>
             <p className="text-text-dim mb-6">
               Tem certeza que deseja limpar o cache? Isso pode fazer com que o aplicativo carregue mais devagar na próxima vez.
@@ -614,14 +619,17 @@ export default function Profile() {
                 )}
               </button>
             </div>
-          </div>
-        </div>
+            </div>
+          </div>,
+          document.body
+        )
       )}
 
       {/* Cache Success Modal */}
       {showCacheSuccessModal && (
-        <div className="modal-overlay" onClick={() => setShowCacheSuccessModal(false)}>
-          <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+        createPortal(
+          <div className="modal-overlay" onClick={() => setShowCacheSuccessModal(false)}>
+            <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
             <div className="text-center">
               <div className="w-16 h-16 rounded-full bg-green-500/20 border-2 border-green-500 flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -639,8 +647,10 @@ export default function Profile() {
                 Fechar
               </button>
             </div>
-          </div>
-        </div>
+            </div>
+          </div>,
+          document.body
+        )
       )}
     </div>
   )

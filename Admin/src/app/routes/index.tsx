@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createHashRouter, Navigate } from 'react-router-dom'
 import DashboardLayout from '../layout/DashboardLayout'
 import { AdminGuard } from './guards/AdminGuard'
 import LoginPage from '@/features/auth/pages/LoginPage'
@@ -16,7 +16,7 @@ import SettingsPage from '@/features/settings/pages/SettingsPage'
 import SecurityPage from '@/features/security/pages/SecurityPage'
 import MonitoringPage from '@/features/monitoring/pages/MonitoringPage'
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: '/login',
     element: <LoginPage />

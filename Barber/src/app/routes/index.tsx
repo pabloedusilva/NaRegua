@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createHashRouter, Navigate } from 'react-router-dom'
 import RootLayout from '../layout/RootLayout'
 import DashboardLayout from '../layout/DashboardLayout'
 import AuthLayout from '../layout/AuthLayout'
@@ -20,7 +20,7 @@ import StickersGallery from '@barber/pages/settings/StickersGallery'
 // Other Pages
 import OfflinePage from '@barber/pages/offline/OfflinePage'
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: '/admin',
     element: <RootLayout />,

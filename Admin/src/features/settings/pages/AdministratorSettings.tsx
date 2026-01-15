@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useToast } from '@/app/providers/ToastProvider';
 import { Eye, EyeOff, Upload, Save, X } from 'lucide-react';
 
@@ -239,8 +240,9 @@ export default function AdministratorSettings() {
 
       {/* Edit Modal */}
       {modalOpen && (
-        <div className="modal-fullscreen">
-          <div className="max-w-4xl mx-auto p-4 md:p-8">
+        createPortal(
+          <div className="modal-fullscreen">
+            <div className="max-w-4xl mx-auto p-4 md:p-8">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -396,14 +398,17 @@ export default function AdministratorSettings() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+            </div>
+          </div>,
+          document.body
+        )
       )}
 
       {/* Password Modal */}
       {passwordModalOpen && (
-        <div className="modal-fullscreen">
-          <div className="max-w-4xl mx-auto p-4 md:p-8">
+        createPortal(
+          <div className="modal-fullscreen">
+            <div className="max-w-4xl mx-auto p-4 md:p-8">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -508,8 +513,10 @@ export default function AdministratorSettings() {
                 </div>
               </div>
             </form>
-          </div>
-        </div>
+            </div>
+          </div>,
+          document.body
+        )
       )}
     </div>
   );

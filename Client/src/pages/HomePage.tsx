@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 import Card from '@components/ui/Card'
 import Button from '@components/ui/Button'
+import Input from '@components/ui/Input'
 import { useEffect, useState } from 'react'
 import ProfileAvatar from '@components/ProfileAvatar'
+import { createPortal } from 'react-dom'
 
 function isOpenNow(hours: { weekdays: [number, number]; saturday: [number, number] }) {
   const now = new Date()
@@ -223,8 +225,9 @@ export default function HomePage() {
       </Card>
 
       {modalOpen && (
-        <div className="fixed inset-0 z-[10000] grid place-items-center backdrop-blur bg-bg/70">
-          <div className="card p-5 w-full max-w-md">
+        createPortal(
+          <div className="fixed inset-0 z-[2147483647] grid place-items-center backdrop-blur bg-bg/70">
+            <div className="card p-5 w-full max-w-md">
             <h3 className="font-display text-gold text-2xl mb-3">Antes de começar</h3>
             <p className="text-text/70 mb-3">Informe seu nome completo e telefone para personalizar sua experiência.</p>
             <form
@@ -253,62 +256,58 @@ export default function HomePage() {
                 // Removed automatic navigation; user stays on home and can choose Agendar depois
               }}
             >
-              <label className="grid gap-1">
-                <span className="text-sm">Nome completo</span>
-                <input
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  autoFocus
-                  required
-                  placeholder="Ex: João Silva"
-                  value={nameInput}
-                  onChange={(e) => {
-                    setNameInput(e.target.value)
-                    if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }))
-                  }}
-                  className={`bg-[#131313] border text-text px-3 py-2 rounded-xl ${errors.name ? 'border-red-500' : 'border-border'}`}
-                />
-                {errors.name && <span className="text-xs text-red-500">{errors.name}</span>}
-              </label>
-              <label className="grid gap-1">
-                <span className="text-sm">Telefone</span>
-                <input
-                  name="phone"
-                  type="tel"
-                  autoComplete="tel"
-                  inputMode="tel"
-                  required
-                  placeholder="Ex: (31) 99999-9999"
-                  value={phoneInput}
-                  onChange={(e) => {
-                    const digits = e.target.value.replace(/\D/g, '').slice(0, 11)
-                    const dd = digits.slice(0, 2)
-                    const rest = digits.slice(2)
-                    let left = ''
-                    let right = ''
-                    if (rest.length >= 9) {
-                      left = rest.slice(0, 5)
-                      right = rest.slice(5, 9)
-                    } else {
-                      left = rest.slice(0, 4)
-                      right = rest.slice(4, 8)
-                    }
-                    const formatted = dd ? `(${dd}) ${left}${right ? '-' + right : ''}` : ''
-                    setPhoneInput(formatted)
-                    if (errors.phone) setErrors((prev) => ({ ...prev, phone: undefined }))
-                  }}
-                  className={`bg-[#131313] border text-text px-3 py-2 rounded-xl ${errors.phone ? 'border-red-500' : 'border-border'}`}
-                />
-                {errors.phone && <span className="text-xs text-red-500">{errors.phone}</span>}
-              </label>
+              <Input
+                label="Nome completo"
+                name="name"
+                type="text"
+                autoComplete="name"
+                autoFocus
+                required
+                placeholder="Ex: João Silva"
+                value={nameInput}
+                onChange={(e) => {
+                  setNameInput(e.target.value)
+                  if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }))
+                }}
+                error={errors.name}
+              />
+              <Input
+                label="Telefone"
+                name="phone"
+                type="tel"
+                autoComplete="tel"
+                inputMode="tel"
+                required
+                placeholder="Ex: (31) 99999-9999"
+                value={phoneInput}
+                onChange={(e) => {
+                  const digits = e.target.value.replace(/\D/g, '').slice(0, 11)
+                  const dd = digits.slice(0, 2)
+                  const rest = digits.slice(2)
+                  let left = ''
+                  let right = ''
+                  if (rest.length >= 9) {
+                    left = rest.slice(0, 5)
+                    right = rest.slice(5, 9)
+                  } else {
+                    left = rest.slice(0, 4)
+                    right = rest.slice(4, 8)
+                  }
+                  const formatted = dd ? `(${dd}) ${left}${right ? '-' + right : ''}` : ''
+                  setPhoneInput(formatted)
+                  if (errors.phone) setErrors((prev) => ({ ...prev, phone: undefined }))
+                }}
+                error={errors.phone}
+              />
               <div className="flex justify-end gap-2 pt-2">
                 <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>Cancelar</Button>
                 <Button type="submit" variant="primary">Continuar</Button>
               </div>
             </form>
-          </div>
-        </div>
+            </div>
+          </div>,
+          document.body
+        )
       )}
     </div>
   )

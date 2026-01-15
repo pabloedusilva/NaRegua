@@ -55,4 +55,3 @@ export default function Avatar({ src, name, size = 'md', className, ...props }: 
 }
 
 export { Avatar }
-export default Avatar

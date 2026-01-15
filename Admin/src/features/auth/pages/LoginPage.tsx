@@ -2,6 +2,7 @@ import { useState, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Input } from '@/components/ui/Input'
 import { useToast } from '@/app/providers/ToastProvider'
+import { useAuth } from '@/app/providers/AuthProvider'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -9,6 +10,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const { showToast } = useToast()
+  const { login } = useAuth()
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault()
@@ -26,13 +28,11 @@ export default function LoginPage() {
         }
         const mockToken = 'mock-admin-token-' + Date.now()
 
-        localStorage.setItem('admin_user', JSON.stringify(mockUser))
-        localStorage.setItem('admin_token', mockToken)
+        login(mockUser, mockToken)
 
         showToast('Login realizado com sucesso!', 'success')
-        
-        // Recarrega a página para atualizar o contexto de autenticação
-        window.location.href = '/admin/dashboard'
+
+        navigate('/admin/dashboard', { replace: true })
       } else {
         showToast('Preencha todos os campos', 'error')
       }

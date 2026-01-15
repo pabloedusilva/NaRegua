@@ -1,4 +1,7 @@
-export default function Layout({ children }: { children: React.ReactNode }) {
+import type { ReactNode } from 'react'
+import { Link } from 'react-router-dom'
+
+export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-dvh flex flex-col">
       {/* Header removido conforme solicitação para manter o código limpo */}
@@ -14,9 +17,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="footer-legal">
               <span className="copyright">&copy; Régua Máxima todos os direitos reservados 2026</span>
               <nav className="footer-links" aria-label="Links legais">
-                <a href="/termos">Termos de uso</a>
-                <a href="/privacidade">Política de Privacidade</a>
-                <a href="/sobre">Sobre</a>
+                <Link to="/termos">Termos de uso</Link>
+                <Link to="/privacidade">Política de Privacidade</Link>
+                <Link to="/sobre">Sobre</Link>
               </nav>
             </div>
             <div className="footer-social" aria-label="Redes e contato">

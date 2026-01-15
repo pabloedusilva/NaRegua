@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import ImageWithFallback from '../../components/ui/ImageWithFallback'
 
 // TODO: Backend Integration
@@ -224,8 +225,9 @@ export default function ListServices() {
 
       {/* Add/Edit Modal - Fullscreen */}
       {modalOpen && (
-        <div className="modal-fullscreen">
-          <div className="max-w-4xl mx-auto p-4 md:p-8">
+        createPortal(
+          <div className="modal-fullscreen">
+            <div className="max-w-4xl mx-auto p-4 md:p-8">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div>
@@ -350,34 +352,39 @@ export default function ListServices() {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
+            </div>
+          </div>,
+          document.body
+        )
       )}
 
       {/* Delete Confirmation Modal */}
       {deleteServiceId && (
-        <div className="modal-overlay" onClick={() => setDeleteServiceId(null)}>
-          <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-xl font-semibold text-text mb-4">Excluir Serviço</h3>
-            <p className="text-text-dim mb-6">
-              Tem certeza que deseja excluir este serviço? Esta ação não pode ser desfeita.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setDeleteServiceId(null)}
-                className="btn btn-outline flex-1"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={() => handleDelete(deleteServiceId)}
-                className="btn btn-danger flex-1"
-              >
-                Excluir
-              </button>
+        createPortal(
+          <div className="modal-overlay" onClick={() => setDeleteServiceId(null)}>
+            <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+              <h3 className="text-xl font-semibold text-text mb-4">Excluir Serviço</h3>
+              <p className="text-text-dim mb-6">
+                Tem certeza que deseja excluir este serviço? Esta ação não pode ser desfeita.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setDeleteServiceId(null)}
+                  className="btn btn-outline flex-1"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={() => handleDelete(deleteServiceId)}
+                  className="btn btn-danger flex-1"
+                >
+                  Excluir
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
+          </div>,
+          document.body
+        )
       )}
     </div>
   )

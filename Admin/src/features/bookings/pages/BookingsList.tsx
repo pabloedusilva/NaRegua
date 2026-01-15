@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useToast } from '@/app/providers/ToastProvider';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import Modal from '@/components/ui/Modal';
-import { Search, Calendar, Eye, X, Scissors, Building2, Clock, DollarSign } from 'lucide-react';
+import { Search, Calendar, Eye, Scissors, Building2, Clock, DollarSign } from 'lucide-react';
 import Badge from '@/components/ui/Badge';
 
 interface Booking {
@@ -20,7 +19,6 @@ interface Booking {
 }
 
 export default function BookingsList() {
-  const { showToast } = useToast();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -83,13 +81,6 @@ export default function BookingsList() {
     ];
     setBookings(loaded);
     localStorage.setItem('admin_bookings', JSON.stringify(loaded));
-  };
-
-  const handleStatusChange = (id: string, newStatus: Booking['status']) => {
-    const updated = bookings.map(b => b.id === id ? { ...b, status: newStatus } : b);
-    setBookings(updated);
-    localStorage.setItem('admin_bookings', JSON.stringify(updated));
-    showToast(`Agendamento atualizado para ${newStatus}!`, 'success');
   };
 
   const filteredBookings = bookings.filter(b => {

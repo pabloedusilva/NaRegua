@@ -1,5 +1,6 @@
 import Button from '../ui/Button'
 import Card from '../ui/Card'
+import { createPortal } from 'react-dom'
 
 interface CancelConfirmModalProps {
   onConfirm: () => void
@@ -18,8 +19,9 @@ export default function CancelConfirmModal({ onConfirm, onCancel, bookingTime, b
   })
 
   return (
-    <div className="fixed inset-0 z-[10000] grid place-items-center backdrop-blur-sm bg-bg/80 p-4">
-      <Card className="w-full max-w-md">
+    createPortal(
+      <div className="fixed inset-0 z-[2147483647] grid place-items-center backdrop-blur-sm bg-bg/80 p-4">
+        <Card className="w-full max-w-md">
         <div className="grid gap-5">
           <div className="text-center">
             <div className="mx-auto w-14 h-14 rounded-full bg-red-400/15 border border-red-400/30 grid place-items-center mb-3">
@@ -53,7 +55,9 @@ export default function CancelConfirmModal({ onConfirm, onCancel, bookingTime, b
             </Button>
           </div>
         </div>
-      </Card>
-    </div>
+        </Card>
+      </div>,
+      document.body
+    )
   )
 }

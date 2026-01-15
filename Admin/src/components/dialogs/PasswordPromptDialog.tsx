@@ -60,7 +60,6 @@ export default function PasswordPromptDialog({
           placeholder="Digite sua senha"
           autoFocus
           required
-          fullWidth
         />
         
         <div className="flex gap-3 justify-end">

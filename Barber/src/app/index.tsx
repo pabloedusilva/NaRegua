@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import App from './App'
 import { ToastProvider } from './providers/ToastProvider'
 import { initPWA } from '@barber/utils/pwa'
@@ -15,10 +15,10 @@ initAppIcon('/assets/images/logoSelect/1.jpg')
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <ToastProvider>
         <App />
       </ToastProvider>
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>
 )

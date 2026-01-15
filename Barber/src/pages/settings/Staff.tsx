@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 // TODO: Backend Integration
 // GET /api/professionals - List all professionals
@@ -231,8 +232,9 @@ export default function Staff() {
 
       {/* Add/Edit Modal - Fullscreen */}
       {modalOpen && (
-        <div className="modal-fullscreen">
-          <div className="max-w-2xl mx-auto p-4 md:p-8">
+        createPortal(
+          <div className="modal-fullscreen">
+            <div className="max-w-2xl mx-auto p-4 md:p-8">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div>
@@ -321,14 +323,17 @@ export default function Staff() {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
+            </div>
+          </div>,
+          document.body
+        )
       )}
 
       {/* Delete Confirmation Modal */}
       {deleteProfessionalId && (
-        <div className="modal-overlay" onClick={() => setDeleteProfessionalId(null)}>
-          <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+        createPortal(
+          <div className="modal-overlay" onClick={() => setDeleteProfessionalId(null)}>
+            <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-xl font-semibold text-text mb-4">Excluir Profissional</h3>
             <p className="text-text-dim mb-6">
               Tem certeza que deseja excluir este profissional? Esta ação não pode ser desfeita.
@@ -347,8 +352,10 @@ export default function Staff() {
                 Excluir
               </button>
             </div>
-          </div>
-        </div>
+            </div>
+          </div>,
+          document.body
+        )
       )}
     </div>
   )

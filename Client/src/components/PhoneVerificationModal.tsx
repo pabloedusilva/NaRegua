@@ -1,6 +1,8 @@
 import { useState, FormEvent } from 'react'
 import Button from '@components/ui/Button'
 import Card from '@components/ui/Card'
+import Input from '@components/ui/Input'
+import { createPortal } from 'react-dom'
 
 interface PhoneVerificationModalProps {
   onVerified: (phone: string) => void
@@ -33,7 +35,8 @@ export default function PhoneVerificationModal({ onVerified, onClose }: PhoneVer
   }
 
   return (
-    <div className="fixed inset-0 z-[10000] grid place-items-center backdrop-blur-sm bg-bg/80 p-4">
+    createPortal(
+      <div className="fixed inset-0 z-[2147483647] grid place-items-center backdrop-blur-sm bg-bg/80 p-4">
       <Card className="w-full max-w-md relative">
         <button
           onClick={onClose}
@@ -52,44 +55,39 @@ export default function PhoneVerificationModal({ onVerified, onClose }: PhoneVer
           </div>
 
           <form onSubmit={handleSubmit} className="grid gap-4">
-            <div className="grid gap-1.5">
-              <label htmlFor="phone-verify" className="text-sm text-text/80">Telefone</label>
-              <input
-                id="phone-verify"
-                name="phone"
-                type="tel"
-                autoComplete="tel"
-                inputMode="tel"
-                required
-                placeholder="Ex: (31) 99999-9999"
-                value={phoneInput}
-                onChange={(e) => {
-                  const digits = e.target.value.replace(/\D/g, '').slice(0, 11)
-                  const dd = digits.slice(0, 2)
-                  const rest = digits.slice(2)
-                  let left = ''
-                  let right = ''
-                  if (rest.length >= 9) {
-                    left = rest.slice(0, 5)
-                    right = rest.slice(5, 9)
-                  } else {
-                    left = rest.slice(0, 4)
-                    right = rest.slice(4, 8)
-                  }
-                  const parts = [dd, left, right].filter(Boolean)
-                  let formatted = ''
-                  if (parts[0]) formatted = `(${parts[0]}`
-                  if (parts[1]) formatted += `) ${parts[1]}`
-                  if (parts[2]) formatted += `-${parts[2]}`
-                  setPhoneInput(formatted)
-                  setError('')
-                }}
-                className={`w-full px-4 py-2.5 rounded-xl bg-surface border ${
-                  error ? 'border-red-500' : 'border-border'
-                } text-text focus:outline-none focus:border-gold transition`}
-              />
-              {error && <div className="text-red-500 text-xs">{error}</div>}
-            </div>
+            <Input
+              label="Telefone"
+              id="phone-verify"
+              name="phone"
+              type="tel"
+              autoComplete="tel"
+              inputMode="tel"
+              required
+              placeholder="Ex: (31) 99999-9999"
+              value={phoneInput}
+              onChange={(e) => {
+                const digits = e.target.value.replace(/\D/g, '').slice(0, 11)
+                const dd = digits.slice(0, 2)
+                const rest = digits.slice(2)
+                let left = ''
+                let right = ''
+                if (rest.length >= 9) {
+                  left = rest.slice(0, 5)
+                  right = rest.slice(5, 9)
+                } else {
+                  left = rest.slice(0, 4)
+                  right = rest.slice(4, 8)
+                }
+                const parts = [dd, left, right].filter(Boolean)
+                let formatted = ''
+                if (parts[0]) formatted = `(${parts[0]}`
+                if (parts[1]) formatted += `) ${parts[1]}`
+                if (parts[2]) formatted += `-${parts[2]}`
+                setPhoneInput(formatted)
+                setError('')
+              }}
+              error={error}
+            />
 
             <Button type="submit" variant="primary" className="w-full">
               Continuar
@@ -97,6 +95,8 @@ export default function PhoneVerificationModal({ onVerified, onClose }: PhoneVer
           </form>
         </div>
       </Card>
-    </div>
+    </div>,
+    document.body
+    )
   )
 }

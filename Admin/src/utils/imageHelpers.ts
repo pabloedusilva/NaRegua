@@ -21,5 +21,5 @@ export const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
  * Check if an image URL is valid and accessible
  */
 export const isValidImageUrl = (url: string): boolean => {
-  return url && url.trim().length > 0
+  return !!(url && url.trim().length > 0)
 }

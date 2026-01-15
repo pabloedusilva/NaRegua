@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { createPortal } from 'react-dom'
 import NextBookingHighlight from '@barber/components/bookings/NextBookingHighlight'
 
 // TODO: Backend Integration - Replace localStorage with API calls
@@ -334,8 +335,9 @@ export default function DashboardHome() {
 
       {/* Cancel Confirmation Modal */}
       {bookingToCancel && (
-        <div className="modal-overlay" onClick={() => setBookingToCancel(null)}>
-          <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+        createPortal(
+          <div className="modal-overlay" onClick={() => setBookingToCancel(null)}>
+            <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-xl font-semibold text-text mb-4">Cancelar Agendamento</h3>
             <p className="text-text-dim mb-6">
               Tem certeza que deseja cancelar este agendamento? Esta ação não pode ser desfeita.
@@ -354,8 +356,10 @@ export default function DashboardHome() {
                 Cancelar Agendamento
               </button>
             </div>
-          </div>
-        </div>
+            </div>
+          </div>,
+          document.body
+        )
       )}
     </div>
   )

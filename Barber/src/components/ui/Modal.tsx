@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 type ModalProps = {
   open: boolean;
@@ -34,10 +35,11 @@ export default function Modal({ open, onClose, children, size = 'md', title }: M
 
   // Fullscreen modal
   if (size === 'fullscreen') {
-    return (
+    return createPortal(
       <div className="modal-fullscreen">
         {children}
-      </div>
+      </div>,
+      document.body
     );
   }
 
@@ -48,7 +50,7 @@ export default function Modal({ open, onClose, children, size = 'md', title }: M
     xl: 'max-w-xl',
   };
 
-  return (
+  return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className={`modal-content p-6 w-full ${sizeClasses[size]}`} onClick={(e) => e.stopPropagation()}>
         {title && (
@@ -66,6 +68,7 @@ export default function Modal({ open, onClose, children, size = 'md', title }: M
         )}
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

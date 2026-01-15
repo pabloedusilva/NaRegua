@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Download, Smartphone, X } from 'lucide-react';
 import { isIOS } from '@barber/utils/pwa';
 
@@ -68,7 +69,7 @@ export default function InstallPWAModal({ isOpen, onClose, onInstall, canInstall
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div 
       className="drawer-overlay"
       onClick={handleOverlayClick}
@@ -192,6 +193,7 @@ export default function InstallPWAModal({ isOpen, onClose, onInstall, canInstall
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
