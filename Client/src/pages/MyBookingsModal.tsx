@@ -42,8 +42,8 @@ export default function MyBookingsModal() {
 
   return (
     createPortal(
-      <div className="fixed inset-0 z-[2147483647] bg-bg grid">
-        <div className="relative w-full h-dvh overflow-y-auto">
+      <div className="fixed inset-0 z-[2147483647] bg-bg overflow-hidden">
+        <div className="relative w-full h-dvh overflow-y-auto overflow-x-hidden">
           <div className="absolute top-3 left-3 z-10">
           <button
             className="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-border bg-surface text-text hover:-translate-y-px transition"
