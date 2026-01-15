@@ -181,7 +181,7 @@
 }
 
 /* Success overlay animation */
-.success-overlay { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; backdrop-filter: blur(10px); background: rgba(15,15,16,.65); }
+.success-overlay { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; backdrop-filter: blur(10px); background: rgba(15,15,16,.65); }
 .success-card { background: #121212; border: 1px solid var(--border); border-radius: 16px; padding: 1.2rem 1.4rem; box-shadow: var(--shadow); display: grid; gap: .6rem; justify-items: center; animation: popIn .26s ease-out; }
 .success-icon { width: 86px; height: 86px; display: grid; place-items: center; color: var(--gold); }
 .success-icon svg { width: 86px; height: 86px; }

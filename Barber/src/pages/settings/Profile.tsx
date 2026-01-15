@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Trash2 } from 'lucide-react'
 // image fallback handled via ImageWithFallback
 import { formatPhone } from '../../utils/format'
+import { applyAndPersistAppIcon, getSelectedAppIcon } from '@barber/lib/appIcon'
 
 // TODO: Backend Integration
 // GET /api/settings/profile - Get barbershop profile
@@ -13,7 +14,7 @@ interface BarbershopProfile {
   logo: string
   instagram: string
   whatsapp: string
-  description: string
+  bookingLink: string
 }
 
 // Available avatar options from public/assets/images/profile/
@@ -27,13 +28,21 @@ const AVATAR_OPTIONS = [
   '/assets/images/profile/profile7.jpg',
 ]
 
+const APP_ICON_OPTIONS = [
+  '/assets/images/logoSelect/1.jpg',
+  '/assets/images/logoSelect/2.jpg',
+  '/assets/images/logoSelect/3.jpg',
+  '/assets/images/logoSelect/4.jpg',
+  '/assets/images/logoSelect/5.jpg',
+]
+
 export default function Profile() {
   const [profile, setProfile] = useState<BarbershopProfile>({
     name: 'Régua Máxima',
     logo: '/assets/images/logos/logo.png',
     instagram: '@reguamaxima',
     whatsapp: '(00) 00000-0000',
-    description: 'Barbearia de excelência com atendimento personalizado'
+    bookingLink: 'http://localhost:5173/barbearia/ce5b7602-0b8a-4728-b5f8-06336bdc5255'
   })
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
@@ -46,6 +55,12 @@ export default function Profile() {
   const [isClearingCache, setIsClearingCache] = useState(false)
   const [showClearCacheModal, setShowClearCacheModal] = useState(false)
   const [showCacheSuccessModal, setShowCacheSuccessModal] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const [selectedAppIcon, setSelectedAppIconState] = useState(() => {
+    const stored = typeof window !== 'undefined' ? getSelectedAppIcon() : null
+    return stored || APP_ICON_OPTIONS[0]
+  })
+  const [isApplyingAppIcon, setIsApplyingAppIcon] = useState(false)
 
   useEffect(() => {
     document.title = 'Régua Máxima | Dashboard Barbeiro';
@@ -246,10 +261,130 @@ export default function Profile() {
         </div>
 
 
-        {/* Description */}
+        {/* Booking Link */}
         <div className="card md:col-span-2">
-          <h3 className="text-lg font-semibold text-text mb-4">Descrição</h3>
-          <p className="text-text-dim leading-relaxed">{profile.description}</p>
+          <h3 className="text-lg font-semibold text-text mb-4">Link de Agendamento</h3>
+          <p className="text-sm text-text-dim mb-4">Compartilhe este link com seus clientes para que possam agendar serviços</p>
+          
+          {/* Link Display */}
+          <div className="bg-surface border border-border rounded-xl p-4 mb-4">
+            <div className="flex items-center gap-3">
+              <svg className="w-5 h-5 text-gold shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+              </svg>
+              <span className="text-text font-mono text-sm break-all flex-1">{profile.bookingLink}</span>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(profile.bookingLink)
+                setCopied(true)
+                setTimeout(() => setCopied(false), 2000)
+              }}
+              className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-gold/10 hover:bg-gold/20 border border-gold/30 rounded-xl text-gold font-medium transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-gold/20"
+            >
+              {copied ? (
+                <>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Copiado!</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  <span>Copiar Link</span>
+                </>
+              )}
+            </button>
+            
+            <button
+              onClick={() => window.open(profile.bookingLink, '_blank')}
+              className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-gold to-yellow-600 hover:from-yellow-600 hover:to-gold rounded-xl text-bg font-medium transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-gold/30"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              <span>Abrir Link</span>
+            </button>
+          </div>
+
+          {/* App Icon (PWA) */}
+          <div className="mt-6 pt-6 border-t border-border">
+            <div className="flex items-start justify-between gap-4 mb-4">
+              <div className="min-w-0">
+                <h4 className="text-base font-semibold text-text">Ícone do App (PWA)</h4>
+                <p className="text-sm text-text-dim mt-1">
+                  Escolha qual logo será usada como ícone do app. A seleção fica salva neste dispositivo.
+                </p>
+              </div>
+
+              <div className="shrink-0">
+                <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-16 lg:h-16 xl:w-20 xl:h-20 rounded-2xl border border-border bg-surface p-1.5 lg:p-2.5 shadow-lg shadow-black/30">
+                  <img
+                    src={selectedAppIcon}
+                    alt="Ícone selecionado"
+                    className="w-full h-full object-cover rounded-xl"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-[280px] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[560px] xl:max-w-[640px]">
+              <div className="grid grid-cols-5 gap-2 sm:gap-3 md:gap-3.5 lg:gap-4">
+              {APP_ICON_OPTIONS.map((icon) => {
+                const isSelected = icon === selectedAppIcon
+                return (
+                  <button
+                    key={icon}
+                    type="button"
+                    onClick={async () => {
+                      if (isApplyingAppIcon) return
+                      setIsApplyingAppIcon(true)
+                      setSelectedAppIconState(icon)
+                      try {
+                        await applyAndPersistAppIcon(icon)
+                      } finally {
+                        setIsApplyingAppIcon(false)
+                      }
+                    }}
+                    className={`relative aspect-square rounded-xl sm:rounded-2xl border transition-all overflow-hidden bg-surface hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/30 ${
+                      isSelected
+                        ? 'border-gold shadow-lg shadow-gold/20'
+                        : 'border-border hover:border-gold/50'
+                    } ${isApplyingAppIcon ? 'opacity-80 cursor-not-allowed' : ''}`}
+                    aria-label={isSelected ? 'Ícone selecionado' : 'Selecionar ícone'}
+                    title={isSelected ? 'Selecionado' : 'Selecionar'}
+                  >
+                    <img
+                      src={icon}
+                      alt="Opção de ícone"
+                      className="w-full h-full object-cover"
+                    />
+                    {isSelected && (
+                      <div className="absolute inset-0 bg-gold/15 flex items-center justify-center">
+                        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-bg/70 border border-gold/30 flex items-center justify-center">
+                          <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                      </div>
+                    )}
+                  </button>
+                )
+              })}
+              </div>
+            </div>
+
+            <p className="text-xs text-text-dim mt-3">
+              Dica: para refletir no ícone do app instalado, pode ser necessário reinstalar o PWA após escolher.
+            </p>
+          </div>
         </div>
       </div>
 
@@ -422,17 +557,6 @@ export default function Profile() {
                       onChange={(e) => setTempProfile({ ...tempProfile, whatsapp: formatPhone(e.target.value) })}
                       className="w-full px-4 py-3 bg-surface border border-border rounded-xl text-text placeholder:text-muted focus:outline-none focus:border-gold transition-colors"
                       placeholder="(00) 00000-0000"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-text mb-2">Descrição</label>
-                    <textarea
-                      value={tempProfile.description}
-                      onChange={(e) => setTempProfile({ ...tempProfile, description: e.target.value })}
-                      className="w-full px-4 py-3 bg-surface border border-border rounded-xl text-text placeholder:text-muted focus:outline-none focus:border-gold transition-colors resize-none"
-                      placeholder="Descreva sua barbearia..."
-                      rows={4}
                     />
                   </div>
                 </div>

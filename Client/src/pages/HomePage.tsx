@@ -223,7 +223,7 @@ export default function HomePage() {
       </Card>
 
       {modalOpen && (
-        <div className="fixed inset-0 z-50 grid place-items-center backdrop-blur bg-bg/70">
+        <div className="fixed inset-0 z-[10000] grid place-items-center backdrop-blur bg-bg/70">
           <div className="card p-5 w-full max-w-md">
             <h3 className="font-display text-gold text-2xl mb-3">Antes de começar</h3>
             <p className="text-text/70 mb-3">Informe seu nome completo e telefone para personalizar sua experiência.</p>

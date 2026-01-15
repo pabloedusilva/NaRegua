@@ -1,6 +1,6 @@
 export default function BookingModal({ children }: { children: React.ReactNode }) {
   return (
-    <div className="fixed inset-0 z-[100] bg-bg grid">
+    <div className="fixed inset-0 z-[9999] bg-bg grid">
       <div id="booking-modal-scroll" className="relative w-full h-dvh overflow-y-auto">
         <div className="absolute top-3 left-3 z-10">
           <button

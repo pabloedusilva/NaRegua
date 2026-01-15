@@ -124,13 +124,13 @@
   .modal-overlay {
     position: fixed;
     inset: 0;
-    @apply bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4;
+    @apply bg-black/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4;
   }
   .modal-content {
     @apply bg-[#141414] border border-border rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto;
   }
   .modal-fullscreen {
-    @apply fixed inset-0 bg-bg z-[100] overflow-y-auto;
+    @apply fixed inset-0 bg-bg z-[9999] overflow-y-auto;
   }
   
   /* Table Styles */
@@ -191,7 +191,7 @@
 .drawer-overlay {
   position: fixed;
   inset: 0;
-  z-index: 50;
+  z-index: 9999;
   background: color-mix(in oklab, var(--bg) 70%, transparent);
   backdrop-filter: blur(6px);
   display: grid;

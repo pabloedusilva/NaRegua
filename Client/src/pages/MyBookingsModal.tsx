@@ -40,7 +40,7 @@ export default function MyBookingsModal() {
   }
 
   return (
-    <div className="fixed inset-0 z-[100] bg-bg grid">
+    <div className="fixed inset-0 z-[9999] bg-bg grid">
       <div className="relative w-full h-dvh overflow-y-auto">
         <div className="absolute top-3 left-3 z-10">
           <button

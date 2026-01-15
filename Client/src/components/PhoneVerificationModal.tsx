@@ -33,7 +33,7 @@ export default function PhoneVerificationModal({ onVerified, onClose }: PhoneVer
   }
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center backdrop-blur-sm bg-bg/80 p-4">
+    <div className="fixed inset-0 z-[10000] grid place-items-center backdrop-blur-sm bg-bg/80 p-4">
       <Card className="w-full max-w-md relative">
         <button
           onClick={onClose}
