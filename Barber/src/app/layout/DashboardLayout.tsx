@@ -16,7 +16,7 @@ export default function DashboardLayout() {
 
   const { count: notificationsCount } = useNotifications()
   
-  const { canInstall, isInstalled, promptInstall, isStandalone } = usePWAInstall()
+  const { canInstall, promptInstall } = usePWAInstall()
   
   // Detecta quando o usuário fica offline
   useOfflineDetection()
