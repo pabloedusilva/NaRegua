@@ -667,7 +667,7 @@ export default function PromotionsList() {
                   </div>
 
                   <Input
-                    label={<>Link <span className="text-xs text-text-dim/60 font-normal">(opcional)</span></>}
+                    label="Link (opcional)"
                     type="url"
                     value={formData.link}
                     onChange={(e) => setFormData({ ...formData, link: e.target.value })}
