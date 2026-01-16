@@ -32,6 +32,9 @@ const PROMOTION_IMAGES = [
   '/assets/images/promocoes/7.jpg',
   '/assets/images/promocoes/8.jpg',
   '/assets/images/promocoes/9.jpg',
+  '/assets/images/promocoes/10.jpg',
+  '/assets/images/promocoes/11.jpg',
+  '/assets/images/promocoes/12.jpg',
 ];
 
 export default function PromotionsList() {
