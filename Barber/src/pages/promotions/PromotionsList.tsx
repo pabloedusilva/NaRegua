@@ -173,10 +173,8 @@ export default function PromotionsList() {
     let updated: Promotion[];
     if (editingPromotion) {
       updated = promotions.map(p => p.id === editingPromotion.id ? promotionData : p);
-      showToast('Promoção atualizada com sucesso!', 'success');
     } else {
       updated = [...promotions, promotionData];
-      showToast('Promoção criada com sucesso!', 'success');
     }
 
     // Salvar no localStorage
@@ -207,7 +205,7 @@ export default function PromotionsList() {
     setPromotions(updated);
     localStorage.setItem('barber_promotions', JSON.stringify(updated));
     setDeleteId(null);
-    showToast('Promoção removida com sucesso!', 'success');
+    // notification removed per request
   };
 
   const incrementViewCount = (id: string) => {
@@ -246,10 +244,7 @@ export default function PromotionsList() {
       const result = reader.result as string;
       setFormData({ ...formData, image: result });
       setUploadingImage(false);
-      
-      // Calcular tamanho da imagem em base64
-      const sizeKB = Math.round((result.length * 3) / 4 / 1024);
-      showToast(`Imagem carregada com sucesso! (${sizeKB}KB)`, 'success');
+      // success notification removed
     };
     
     reader.onerror = () => {
@@ -261,9 +256,7 @@ export default function PromotionsList() {
   };
 
   const handleImageSelect = (imageUrl: string) => {
-    console.log('Imagem selecionada:', imageUrl);
     setFormData({ ...formData, image: imageUrl });
-    showToast('Imagem selecionada com sucesso!', 'success');
   };
 
   const isSelected = (imageUrl: string) => {
