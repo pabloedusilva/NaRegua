@@ -551,7 +551,7 @@ export default function PromotionsPage() {
             <div className="flex items-center gap-2 text-sm text-text-dim mb-6">
               <CalendarClock className="w-4 h-4 text-gold" />
               <span>
-                Válido de {new Date(previewPromotion.startDate).toLocaleDateString('pt-BR')} até {new Date(previewPromotion.endDate).toLocaleDateString('pt-BR')}
+                De {new Date(previewPromotion.startDate).toLocaleDateString('pt-BR')} até {new Date(previewPromotion.endDate).toLocaleDateString('pt-BR')}
               </span>
             </div>
 
