@@ -116,6 +116,23 @@ export default function DashboardHome() {
     setBookingToCancel(bookingId)
   }
 
+  const handleCompleteBooking = (bookingId: string) => {
+    try {
+      // TODO: Backend Integration
+      // PATCH /api/bookings/:id/complete - Mark booking as completed
+      
+      const bookingsRaw = localStorage.getItem('userBookings')
+      const allBookings: Booking[] = bookingsRaw ? JSON.parse(bookingsRaw) : []
+      const updated = allBookings.map(b =>
+        b.id === bookingId ? { ...b, status: 'completed' as const } : b
+      )
+      localStorage.setItem('userBookings', JSON.stringify(updated))
+      loadDashboardData() // Reload data to update the view
+    } catch (error) {
+      console.error('Error completing booking:', error)
+    }
+  }
+
   const confirmCancelBooking = () => {
     if (!bookingToCancel) return
 
@@ -289,7 +306,10 @@ export default function DashboardHome() {
         ) : (
           <div className="grid gap-4">
             {/* Próximo Agendamento em Destaque */}
-            <NextBookingHighlight booking={upcomingBookings[0]} />
+            <NextBookingHighlight 
+              booking={upcomingBookings[0]} 
+              onComplete={handleCompleteBooking}
+            />
 
             {/* Demais Agendamentos de Hoje - Estilo Cliente */}
             {upcomingBookings.slice(1).map((booking, index) => {

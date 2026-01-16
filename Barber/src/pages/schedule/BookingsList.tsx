@@ -126,6 +126,26 @@ export default function BookingsList() {
     setBookingToCancel(bookingId)
   }
 
+  const handleCompleteBooking = (bookingId: string) => {
+    try {
+      // TODO: Backend Integration
+      // PATCH /api/bookings/:id/complete - Mark booking as completed
+      
+      const toComplete = bookings.find((b) => b.id === bookingId)
+      const updated = bookings.map(b =>
+        b.id === bookingId ? { ...b, status: 'completed' as const } : b
+      )
+      localStorage.setItem('userBookings', JSON.stringify(updated))
+      setBookings(updated)
+
+      if (toComplete) {
+        addFromBooking({ ...toComplete, status: 'completed' }, 'booking_completed')
+      }
+    } catch (error) {
+      console.error('Error completing booking:', error)
+    }
+  }
+
   const confirmCancelBooking = () => {
     if (!bookingToCancel) return
 
@@ -212,7 +232,10 @@ export default function BookingsList() {
       {nextBooking && (
         <div className="animate-fade-in">
           <h2 className="text-text font-semibold text-lg mb-3">Em destaque</h2>
-          <NextBookingHighlight booking={nextBooking} />
+          <NextBookingHighlight 
+            booking={nextBooking} 
+            onComplete={handleCompleteBooking}
+          />
         </div>
       )}
 
