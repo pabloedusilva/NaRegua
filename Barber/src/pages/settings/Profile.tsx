@@ -230,7 +230,7 @@ export default function Profile() {
           
           // Mostra notificação de teste
           new Notification('Notificações Ativadas! 🔔', {
-            body: '\nVocê receberá alertas sobre agendamentos e atualizações importantes.',
+            body: 'Você receberá alertas sobre agendamentos e atualizações importantes.',
             icon: '/assets/images/logos/logo.png',
             badge: '/assets/images/logos/logo.png',
             tag: 'notifications-enabled',
