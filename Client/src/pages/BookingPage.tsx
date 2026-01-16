@@ -503,12 +503,33 @@ export default function BookingPage() {
           {active === 4 && (
             <section className="grid gap-3">
               <h2 className="text-gold font-display text-2xl">Revisar e confirmar</h2>
-              <Card className="p-4 grid gap-2">
-                <div><span className="text-text/70">Profissional:</span> {state.professional?.name}</div>
-                <div><span className="text-text/70">Serviço:</span> {services.find(s => s.id === state.serviceId)?.name ?? '—'}</div>
-                <div><span className="text-text/70">Data:</span> {state.date}</div>
-                <div><span className="text-text/70">Horário:</span> {state.time}</div>
-                <div><span className="text-text/70">Nome:</span> {state.fullName}</div>
+              <Card className="p-4">
+                <div className="grid gap-3">
+                  <div className="grid grid-cols-2 items-center gap-3 py-2 border-b border-border">
+                    <div className="text-text/70 text-sm">Profissional</div>
+                    <div className="text-text font-medium text-right">{state.professional?.name ?? '—'}</div>
+                  </div>
+
+                  <div className="grid grid-cols-2 items-center gap-3 py-2 border-b border-border">
+                    <div className="text-text/70 text-sm">Serviço</div>
+                    <div className="text-text font-medium text-right">{services.find(s => s.id === state.serviceId)?.name ?? '—'}</div>
+                  </div>
+
+                  <div className="grid grid-cols-2 items-center gap-3 py-2 border-b border-border">
+                    <div className="text-text/70 text-sm">Data</div>
+                    <div className="text-text font-medium text-right">{state.date}</div>
+                  </div>
+
+                  <div className="grid grid-cols-2 items-center gap-3 py-2 border-b border-border">
+                    <div className="text-text/70 text-sm">Horário</div>
+                    <div className="text-text font-medium text-right">{state.time}</div>
+                  </div>
+
+                  <div className="grid grid-cols-2 items-center gap-3 py-2">
+                    <div className="text-text/70 text-sm">Nome</div>
+                    <div className="text-text font-medium text-right">{state.fullName}</div>
+                  </div>
+                </div>
               </Card>
               {/* Botões de ação removidos conforme solicitação */}
             </section>

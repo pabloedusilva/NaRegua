@@ -163,9 +163,9 @@ export default function HomePage() {
       <div className="grid gap-3">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-text">Horários</h2>
-          <span className={`text-sm inline-flex items-center gap-2 ${open ? 'text-wa' : 'text-red-500'}`}>
-            <span className={`inline-block w-2 h-2 rounded-full ${open ? 'bg-wa' : 'bg-red-500'}`}></span>
-            {open ? 'Aberto' : 'Fechado'}
+          <span className={`text-sm inline-flex items-center gap-2 ${open ? 'text-emerald-400' : 'text-red-500'}`}>
+            <span className={`inline-block w-2.5 h-2.5 rounded-full ${open ? 'bg-emerald-400 dot-pulse' : 'bg-red-500'}`}></span>
+            <span className="font-medium">{open ? 'Aberto' : 'Fechado'}</span>
           </span>
         </div>
         <div className="card p-4 border border-border rounded-xl bg-surface grid grid-cols-2 gap-3 text-sm">
